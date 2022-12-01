@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m221128_055158_create_table_catalog_article extends Migration
+class m221201_054531_create_table_catalog_article extends Migration
 {
     public function safeUp()
     {
@@ -15,6 +15,7 @@ class m221128_055158_create_table_catalog_article extends Migration
             '{{%catalog_article}}',
             [
                 'id' => $this->primaryKey(),
+                'name' => $this->string(225)->notNull(),
                 'product_id' => $this->integer()->notNull(),
                 'code' => $this->string(),
                 'price' => $this->decimal(9, 2),
@@ -30,11 +31,6 @@ class m221128_055158_create_table_catalog_article extends Migration
             ],
             $tableOptions
         );
-
-        $this->createIndex('fk-catalog_article-unit_id', '{{%catalog_unit}}', ['id']);
-        $this->createIndex('fk-catalog_article-currency_id', '{{%catalog_currency}}', ['id']);
-        $this->createIndex('fk-catalog_article-product_id', '{{%catalog_product}}', ['id']);
-        //$this->createIndex('idx-catalog_article-image_id', '{{%catalog_article}}', ['image_id']);
     }
 
     public function safeDown()

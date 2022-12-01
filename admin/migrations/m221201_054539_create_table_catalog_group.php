@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m221127_172046_create_table_catalog_product extends Migration
+class m221201_054539_create_table_catalog_group extends Migration
 {
     public function safeUp()
     {
@@ -12,30 +12,31 @@ class m221127_172046_create_table_catalog_product extends Migration
         }
 
         $this->createTable(
-            '{{%catalog_product}}',
+            '{{%catalog_group}}',
             [
                 'id' => $this->primaryKey(),
+                'parent_id' => $this->integer(),
+                'name' => $this->string(225)->notNull(),
                 'slug' => $this->string()->notNull(),
-                'brand_id' => $this->integer(),
                 'cover_image_id' => $this->integer(),
-                'images_list'    => $this->text(),
-                'teaser'         => $this->string(),
-                'text'          => $this->text(),
+                'images_list' => $this->text(),
+                'teaser' => $this->string(),
+                'text' => $this->text(),
                 'created_at' => $this->integer()->notNull(),
                 'updated_at' => $this->integer()->notNull(),
-                'price_from' => $this->integer()->notNull()->defaultValue('0'),
-                'view' => $this->string(),
+                'main' => $this->boolean()->notNull()->defaultValue('0'),
                 'position' => $this->integer()->notNull()->defaultValue('0'),
                 'enabled' => $this->boolean()->notNull()->defaultValue('1'),
             ],
             $tableOptions
         );
 
-        $this->createIndex('fk-catalog_product-brand_id', '{{%catalog_product}}', ['brand_id']);
+        $this->createIndex('fk-catalog_group-cover_image_id', '{{%catalog_group}}', ['cover_image_id']);
+        $this->createIndex('fk-catalog_group-parent_id', '{{%catalog_group}}', ['parent_id']);
     }
 
     public function safeDown()
     {
-        $this->dropTable('{{%catalog_product}}');
+        $this->dropTable('{{%catalog_group}}');
     }
 }

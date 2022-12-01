@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m221127_172040_create_table_catalog_attr_group_ref extends Migration
+class m221201_054538_create_table_catalog_feature_group_ref extends Migration
 {
     public function safeUp()
     {
@@ -12,21 +12,17 @@ class m221127_172040_create_table_catalog_attr_group_ref extends Migration
         }
 
         $this->createTable(
-            '{{%catalog_attr_group_ref}}',
+            '{{%catalog_feature_group_ref}}',
             [
-                'attr_id' => $this->integer()->notNull(),
+                'feature_id' => $this->integer()->notNull(),
                 'group_id' => $this->integer()->notNull(),
             ],
             $tableOptions
         );
-
-        $this->addPrimaryKey('PRIMARYKEY', '{{%catalog_attr_group_ref}}', ['attr_id', 'group_id']);
-
-        $this->createIndex('fk-catalog_attr_group_ref-group_id', '{{%catalog_attr_group_ref}}', ['group_id']);
     }
 
     public function safeDown()
     {
-        $this->dropTable('{{%catalog_attr_group_ref}}');
+        $this->dropTable('{{%catalog_feature_group_ref}}');
     }
 }

@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m221129_065922_create_table_catalog_unit extends Migration
+class m221201_054545_create_table_catalog_unit extends Migration
 {
     public function safeUp()
     {
@@ -16,6 +16,7 @@ class m221129_065922_create_table_catalog_unit extends Migration
             [
                 'id' => $this->primaryKey(),
                 'name' => $this->string()->notNull(),
+                'code' => $this->string(100)->notNull(),
                 'position' => $this->integer()->notNull()->defaultValue('0'),
                 'enabled' => $this->boolean()->notNull()->defaultValue('1'),
             ],

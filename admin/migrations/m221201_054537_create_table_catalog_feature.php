@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m221128_055249_create_table_catalog_attr_value extends Migration
+class m221201_054537_create_table_catalog_feature extends Migration
 {
     public function safeUp()
     {
@@ -12,21 +12,19 @@ class m221128_055249_create_table_catalog_attr_value extends Migration
         }
 
         $this->createTable(
-            '{{%catalog_attr_value}}',
+            '{{%catalog_feature}}',
             [
                 'id' => $this->primaryKey(),
-                'attr_id' => $this->integer()->notNull(),
-                'name'  => $this->string()->notNull(),
+                'name' => $this->string(),
                 'position' => $this->integer()->notNull()->defaultValue('0'),
+                'enabled' => $this->boolean()->notNull()->defaultValue('1'),
             ],
             $tableOptions
         );
-
-        $this->createIndex('fk-catalog_attr_value-attr_id', '{{%catalog_attr_value}}', ['attr_id']);
     }
 
     public function safeDown()
     {
-        $this->dropTable('{{%catalog_attr_value}}');
+        $this->dropTable('{{%catalog_feature}}');
     }
 }

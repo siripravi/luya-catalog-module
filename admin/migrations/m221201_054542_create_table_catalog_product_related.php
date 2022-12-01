@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m221127_172051_create_table_catalog_product_related extends Migration
+class m221201_054542_create_table_catalog_product_related extends Migration
 {
     public function safeUp()
     {

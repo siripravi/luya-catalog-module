@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m221127_172035_create_table_catalog_set extends Migration
+class m221201_054535_create_table_catalog_brand extends Migration
 {
     public function safeUp()
     {
@@ -12,18 +12,22 @@ class m221127_172035_create_table_catalog_set extends Migration
         }
 
         $this->createTable(
-            '{{%catalog_set}}',
+            '{{%catalog_brand}}',
             [
                 'id' => $this->primaryKey(),
-                'name' => $this->string()->notNull(),
+                'name' => $this->string(225)->notNull(),
+                'image_id' => $this->integer(),
                 'position' => $this->integer()->notNull()->defaultValue('0'),
+                'enabled' => $this->boolean()->notNull()->defaultValue('1'),
             ],
             $tableOptions
         );
+
+        $this->createIndex('fk-catalog_brand-image_id', '{{%catalog_brand}}', ['image_id']);
     }
 
     public function safeDown()
     {
-        $this->dropTable('{{%catalog_set}}');
+        $this->dropTable('{{%catalog_brand}}');
     }
 }
