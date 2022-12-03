@@ -7,6 +7,7 @@ use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
 use yii\behaviors\TimestampBehavior;
+use app\modules\catalog\admin\behaviors\ManyToManyBehavior;
 use yii\db\Expression;
 
 /**
@@ -53,13 +54,19 @@ class Product extends NgRestModel
     public function behaviors()
     {
     return [
-        [
-            'class' => TimestampBehavior::class,
-            'createdAtAttribute' => 'created_at',
-            'updatedAtAttribute' => 'updated_at',
-            'value' => new Expression('NOW()'),
-        ],
-    ];
+                [
+                    'class' => TimestampBehavior::class,
+                    'createdAtAttribute' => 'created_at',
+                    'updatedAtAttribute' => 'updated_at',
+                    'value' => new Expression('NOW()'),
+                ],
+                [
+                    'class' => ManyToManyBehavior::class,
+                    'relations' => [
+                        'group_ids' => ['groups'],
+                    ]
+                ]      
+        ];
     }
     /**
      * @inheritdoc
@@ -109,6 +116,7 @@ class Product extends NgRestModel
             [['brand_id', 'created_at', 'updated_at', 'price_from', 'position', 'enabled'], 'integer'],
             [['name','slug', 'view'], 'string', 'max' => 255],
             [['adminGroups'], 'safe'],
+            [['group_ids'], 'each', 'rule' => ['integer']]
         ];
     }
 
@@ -176,6 +184,7 @@ class Product extends NgRestModel
         return $this->hasMany(Group::class, ['id' => 'group_id'])->viaTable(ProductGroupRef::tableName(), ['product_id' => 'id']);
     }
 
+    
     /**
      * @return Article
      */
@@ -188,4 +197,12 @@ class Product extends NgRestModel
     {
         return $this->hasMany(Set::class, ['id' => 'set_id'])->viaTable(ProductSetRef::tableName(), ['product_id' => 'id']);
     }*/
+
+    public function getFeatures(){
+        if (!empty($this->group_ids)) {
+            $features = Feature::getObjectList(true, $model->group_ids);
+        } else {
+            $features = [];
+        }
+    }
 }

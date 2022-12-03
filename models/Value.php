@@ -4,7 +4,7 @@ namespace app\modules\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
-
+use yii\helpers\ArrayHelper;
 /**
  * Value.
  * 
@@ -17,6 +17,8 @@ use luya\admin\ngrest\base\NgRestModel;
  */
 class Value extends NgRestModel
 {
+    public $values_json = [];
+
     /**
      * @inheritdoc
      */
@@ -80,5 +82,45 @@ class Value extends NgRestModel
             [['create', 'update'], ['name', 'feature_id', 'position']],
             ['delete', false],
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFeature()
+    {
+        return $this->hasOne(Feature::class, ['id' => 'feature_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVariants()
+    {
+        return $this->hasMany(Variant::class, ['id' => 'variant_id'])->viaTable('catalog_article_value', ['value_id' => 'id']);
+    }
+
+    /**
+     * @param integer|null $feature_id
+     * @return array
+     */
+    public static function getList($feature_id)
+    {
+        return ArrayHelper::map(self::find()->andFilterWhere(['feature_id' => $feature_id])
+        ->orderBy('position')->all(), 'id', 'name');
+    }
+
+    public static function getListEx($feature_id, $group_id)
+    {
+        $query = self::find();
+        $query->joinWith(['feature']);
+        $query->joinWith(['articles.product.groups']);
+        $query->andWhere(['feature_id' => $feature_id]);
+        $query->andWhere(['group_id' => $group_id]);
+        $query->andWhere(['catalog_article.enabled' => true]);
+        $query->andWhere(['nxt_product.enabled' => true]);
+        $ids = $query->select('catalog_value.id')->groupBy(['catalog_value.id'])->column();
+
+        return ArrayHelper::map(self::find()->andFilterWhere(['feature_id' => $feature_id])->where(['id' => $ids])->orderBy('position')->all(), 'id', 'name');
     }
 }

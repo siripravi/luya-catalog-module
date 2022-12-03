@@ -47,6 +47,7 @@ class Feature extends NgRestModel
             'name' => Yii::t('app', 'Name'),
             'position' => Yii::t('app', 'Position'),
             'enabled' => Yii::t('app', 'Enabled'),
+            'adminGroups' => 'Categories',
         ];
     }
 
@@ -65,6 +66,34 @@ class Feature extends NgRestModel
     public function getGroups()
     {
         return $this->hasMany(Group::class, ['id' => 'group_id'])->viaTable('catalog_feature_group_ref', ['feature_id' => 'id']);
+    }
+
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getValues()
+    {
+        return $this->hasMany(Value::class, ['feature_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getArticles()
+    {
+        // TODO: value_id != feature_id
+        return $this->hasMany(Article::class, ['id' => 'article_id'])->viaTable('catalog_article_value_ref', ['value_id' => 'id']);
+    }
+
+    public function getFeatureValues()
+    {
+        $data = [];
+        foreach ($this->getValues()->all() as $value) {
+            $data[$value->feature_id][$value->id] = $value;
+        }
+        
+        return $data;
     }
 
     /**
@@ -90,6 +119,11 @@ class Feature extends NgRestModel
        ];
     }
 
+    public function extraFields()
+    {
+        return ['adminGroups'];  //adminSets
+    }
+
     /**
      * @inheritdoc
      */
@@ -101,4 +135,32 @@ class Feature extends NgRestModel
             ['delete', false],
         ];
     }
+
+   /* public function ngRestRelations()
+    {
+        return [
+           ['label' => 'Categories', 'targetModel' => FeatureGroupRef::class,'apiEndpoint' => FeatureGroupRef::ngRestApiEndpoint(), 'dataProvider' => $this->getGroups()],
+        ];
+    }*/
+
+    /**
+     * @param boolean|null $enabled
+     * @param array $category_ids
+     * @return array
+     */
+    public static function getList($enabled, $category_ids)
+    {
+        return ArrayHelper::map(self::find()->joinWith(['groups'])->andFilterWhere(['catalog_feature.enabled' => $enabled])->andFilterWhere(['group_id' => $category_ids])->orderBy('position')->all(), 'id', 'name');
+    }
+
+    /**
+     * @param boolean|null $enabled
+     * @param array $category_ids
+     * @return @return MultilingualQuery|\yii\db\ActiveQuery
+     */
+    public static function getObjectList($enabled, array $category_ids)
+    {
+        return self::find()->joinWith(['groups'])->andFilterWhere(['catalog_feature.enabled' => $enabled])->andFilterWhere(['group_id' => $category_ids])->orderBy('position')->all();
+    }
+
 }

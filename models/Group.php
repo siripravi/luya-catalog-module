@@ -5,6 +5,7 @@ namespace app\modules\catalog\models;
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use yii\behaviors\TimestampBehavior;
+use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use yii\db\Expression;
 /**
  * Group.
@@ -26,6 +27,7 @@ use yii\db\Expression;
  */
 class Group extends NgRestModel
 {
+    public $adminFeatures = [];
     /**
      * @inheritdoc
      */
@@ -53,6 +55,11 @@ class Group extends NgRestModel
         return 'api-catalog-group';
     }
 
+    public function extraFields()
+    {
+        return ['adminFeatures'];  //adminSets
+    }
+
     /**
      * @inheritdoc
      */
@@ -72,6 +79,7 @@ class Group extends NgRestModel
             'main' => Yii::t('app', 'Main'),
             'position' => Yii::t('app', 'Position'),
             'enabled' => Yii::t('app', 'Enabled'),
+            'adminFeatures'  => 'Features'
         ];
     }
 
@@ -85,6 +93,7 @@ class Group extends NgRestModel
             [['slug'], 'required'],
             [['images_list', 'text', 'name'], 'string'],
             [['slug', 'teaser'], 'string', 'max' => 255],
+            [['adminFeatures'], 'safe'],
         ];
     }
 
@@ -109,15 +118,40 @@ class Group extends NgRestModel
         ];
     }
 
+    /*public function ngRestRelations()
+    {
+        return [
+           ['label' => 'Features', 'targetModel' => FeatureGroupRef::class,'apiEndpoint' => FeatureGroupRef::ngRestApiEndpoint(), 'dataProvider' => $this->getFeatures()],
+        ];
+    }*/
+
     /**
      * @inheritdoc
      */
     public function ngRestScopes()
     {
         return [
-            ['list', ['name','parent_id', 'slug', 'cover_image_id', 'images_list', 'teaser', 'text', 'created_at', 'updated_at', 'main', 'position', 'enabled']],
-            [['create', 'update'], ['name','parent_id', 'slug', 'cover_image_id', 'images_list', 'teaser', 'text', 'main', 'position', 'enabled']],
+            ['list', ['name','parent_id', 'cover_image_id', 'teaser', 'text', 'created_at', 'updated_at', 'main', 'position', 'enabled']],
+            [['create', 'update'], ['name','parent_id', 'slug', 'cover_image_id', 'images_list', 'teaser', 'text', 'main', 'position','adminFeatures', 'enabled']],
             ['delete', false],
         ];
     }
+
+    public function getFeatures()
+    {
+        return $this->hasMany(Feature::class, ['id' => 'feature_id'])->viaTable('catalog_feature_group_ref', ['group_id' => 'id']);
+    }
+
+    public function ngRestExtraAttributeTypes()
+    {
+        return [
+            'adminFeatures' => [
+                'class' => CheckboxRelationActiveQuery::class,
+                'query' => $this->getFeatures(),
+                'labelField' => ['name'],
+            ],
+       ];
+    }
+
+
 }

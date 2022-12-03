@@ -19,19 +19,10 @@ class ArticleController extends \luya\admin\ngrest\base\Controller
      * @param unknown $id
      * @return unknown
      */
-    public function actionAttributes($id)
+
+    public function actionArticleFeatures()
     {
-        $model = $this->findModel($id);
-        
-        $data = [];
-        
-        foreach ($model->getSets()->with(['setAttributes'])->all() as $set) {
-            $data[] = [
-                'set' => $set,
-                'attributes' => $set->setAttributes,
-            ];
-        }
-        
-        return $data;
+        return $this->render('articlefeature');
     }
+   
 }

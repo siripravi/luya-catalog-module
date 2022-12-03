@@ -6,7 +6,8 @@ use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
-use app\modules\eshop\admin\plugins\ArticleAttributesPlugin;
+use app\modules\catalog\admin\plugins\ArticleFeaturesPlugin;
+use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 
 /**
  * Article.
@@ -30,6 +31,8 @@ use app\modules\eshop\admin\plugins\ArticleAttributesPlugin;
  */
 class Article extends NgRestModel
 {
+    public $adminFeatures = [];
+
     public $i18n = ['name', 'code'];
     /**
      * @inheritdoc
@@ -92,15 +95,24 @@ class Article extends NgRestModel
             [['product_id', 'unit_id', 'available', 'image_id', 'created_at', 'updated_at', 'position', 'enabled'], 'integer'],
            // [['price', 'price_old'], 'number'],
             [['code'], 'string', 'max' => 255],
-            //[['values'], 'safe']
+            [['values'], 'safe'],
+            [['adminFeatures'], 'safe'],
         ];
     }
 
     public function extraFields()
     {
-        return [];
+        return ['adminFeatures'];  //adminSets
     }
 
+    public function ngRestActiveWindows()
+    {
+    return [
+        ['class' => \app\modules\catalog\admin\aws\TestActiveWindow::class, 'label' => 'My Window Alias', 'icon' => 'extension',
+               //'id' => $this->id
+            ],
+    ];
+    }
     /**
      * @inheritdoc
      */
@@ -127,16 +139,22 @@ class Article extends NgRestModel
     public function ngRestExtraAttributeTypes()
     {
         return [
-          //  'values' => [
-          //      'class' => ArticleAttributesPlugin::class,
-          //  ]
+            'adminFeatures' => [
+                'class' => CheckboxRelationActiveQuery::class,
+                'query' => $this->getFeatures(),
+                'labelField' => ['name'],
+            ], 
+            'values' => [
+                'class' => ArticleFeaturesPlugin::class,
+            ]
         ];
     }
-
+  
     public function ngRestRelations()
     {
         return [
            ['label' => 'Prices', 'targetModel' => ArticlePrice::class,'apiEndpoint' => ArticlePrice::ngRestApiEndpoint(), 'dataProvider' => $this->getPrices()],
+           
         ];
     }
     /**
@@ -145,61 +163,87 @@ class Article extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name','product_id', 'code', 'unit_id', 'image_id', 'created_at', 'updated_at', 'enabled']],
-            [['create', 'update'], ['name','product_id', 'code', 'unit_id', 'image_id', 'enabled']],
+            ['list', ['name','product_id', 'code', 'image_id', 'created_at', 'updated_at', 'enabled']],
+            [['create', 'update'], ['name','adminFeatures','product_id', 'code','values',  'image_id', 'enabled']],
             ['delete', false],
         ];
+    }
+
+    public function getProduct(){
+        return $this->hasOne(Product::class,['id'=> 'product_id']);
+    }
+
+    public function getGroups(){
+       return $this->product->groups;
     }
 
     public function getPrices()
     {
         return $this->hasMany(ArticlePrice::class, ['article_id' => 'id']);
     }
-    
-   /* public function getAttributeValues()
+  
+    public function getFeatures()
     {
-        return $this->hasMany(ArticleAttributeValue::class, ['article_id' => 'id']);
-    }*/
-    
+        return $this->hasMany(Feature::class, ['id' => 'feature_id'])->with('groups')->viaTable(FeatureGroupRef::tableName(), ['group_id' => 'id']);
+      
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getValues()
     {
-        $data = [];
-        foreach ($this->attributeValues as $value) {
-            $data[$value->set_id][$value->attribute_id] = $value->value;
-        }
+        //$model = Article::find(['id'=>$id])->one();
+        $product = $this->product;
+        if($product->group_ids) 
+           $features = Feature::getObjectList(true, $product->group_ids);
+        else
+           $features = [];  
+
+        $data = [];        
+        foreach ($features as $set) {
+            $values = Value::getList($set->id);
+            foreach($values as $i => $val){
+            $data[$set->id][$i] = $val;
+            
+         }
+        }        
         
-        return $data;
+       
+        return $data; 
+        
     }
-    
+    public function getAttributeValues()
+    {
+        return $this->hasMany(ArticleValueRef::class, ['article_id' => 'id']);
+    }
+
     public function setValues($data)
     {
+        
         if ($this->isNewRecord) {
             $this->on(self::EVENT_AFTER_INSERT, function () use ($data) {
                 $this->updateSetValues($data);
             });
-        } else {
-            $this->updateSetValues($data);
+        } else {  //print_r($data); die;
+            $this->updateValues($data);
         }
     }
-    
-    private function updateSetValues($data)
+
+    private function updateValues($data)
     {
+        
         $this->unlinkAll('attributeValues', true);
+        
         foreach ($data as $setId => $values) {
             foreach ($values as $attributeId => $attributeValue) {
-                $model = new ArticleAttributeValue();
-                $model->attribute_id = $attributeId;
-                $model->value = $attributeValue;
-                $model->set_id = $setId;
+                $model = new ArticleValueRef();
+                $model->article_id = $this->id;  //$attributeId;
+                //$model->value = $attributeValue;
+                $model->value_id = $attributeId;
                 $this->link('attributeValues', $model);
             }
         }
     }
-
-    public function getSets()
-    {
-        return $this->hasMany(Set::class, ['id' => 'set_id'])->viaTable(ProductSetRef::tableName(), ['product_id' => 'id']);
-    }
-
-    //return self::find()->joinWith(['Group'])->andFilterWhere(['nxt_feature.enabled' => $enabled])->andFilterWhere(['category_id' => $category_ids])->orderBy('position')->all();
+   
 }

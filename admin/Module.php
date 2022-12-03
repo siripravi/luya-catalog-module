@@ -15,7 +15,7 @@ class Module extends \luya\admin\base\Module
         'api-catalog-group'         => 'app\modules\catalog\admin\apis\GroupController',
         'api-catalog-product'       => 'app\modules\catalog\admin\apis\ProductController',
         'api-catalog-set'           => 'app\modules\catalog\admin\apis\SetController',
-        //'api-catalog-setattribute'  => 'app\modules\catalog\admin\apis\SetAttributeController',
+        'api-catalog-articlevalueref'  => 'app\modules\catalog\admin\apis\ArticleValueRefController',
         'api-catalog-article'       => 'app\modules\catalog\admin\apis\ArticleController',
         'api-catalog-feature'          => 'app\modules\catalog\admin\apis\FeatureController',
         'api-catalog-brand'         => 'app\modules\catalog\admin\apis\BrandController',
@@ -52,7 +52,7 @@ class Module extends \luya\admin\base\Module
     public function getAdminAssets()
     {
         return [
-            'app\modules\catalog\admin\assets\CatAdminAsset'
+            'app\modules\catalog\admin\assets\CatalogAdminAsset'
         ];
     }
 }
