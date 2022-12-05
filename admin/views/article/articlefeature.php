@@ -1,35 +1,34 @@
-
-<?php
-use luya\admin\ngrest\aw\CallbackButtonWidget;
-
-?>
-
-<!--?= CallbackButtonWidget::widget(['label' => 'My button', 'callback' => 'hell-world', 'params' => ['name' => 'John Doe']]);?-->
-<div class="card mb-3" ng-repeat="item in data" ng-class="{'card-closed': !groupVisibility}" ng-init="groupVisibility=1">
+<div class="row">
+<div class="card col-4 mb-3" ng-repeat="item in data" ng-class="{'card-closed': !groupVisibility}" ng-init="groupVisibility=1">
 	<div class="card-header text-uppercase" ng-click="groupVisibility=!groupVisibility">
 		<span class="material-icons card-toggle-indicator">keyboard_arrow_down</span>
 		{{ item.set.name }}
 	</div>
 	<div class="card-body" ng-show="groupVisibility">
-		<!--<div ng-repeat="attr in item.attributes">
-			<zaa-injector dir="zaa-checkbox-array" options="attr.values_json" fieldid="{{attr.id}}_{{item.set.id}}" fieldname="{{attr.id}}_{{item.set.id}}" label="{{attr.name}}" model="model[item.set.id][attr.id]"></zaa-injector>
-        </div>  -->
-		<!-- ngRepeat: (k, item) in optionitems track by k -->
-		<div class="form-check ng-scope" ng-repeat="(k, val) in item.attributes track by k">
-            <input type="checkbox" 
-			       class="form-check-input" 
-				   ng-checked="isChecked(val)" 
-				   id="b6gnil_{{k}}" 
-				   ng-click="toggleSelection(val)" 
-				   checked="checked"
-				   fieldid="{{k}}_{{item.set.id}}" 
-				   fieldname="{{k}}_{{item.set.id}}" 				   
-				   ng-model="model[item.set.id][k]" />
-			<label for="b6gnil_{{k}}" class="ng-binding">{{val}}-{{k}}</label>
-        </div>
-		
-            <!-- end ngRepeat: (k, item) in optionitems track by k -->
-           
+		<div ng-repeat="(k, val) in item.attributes">
+			
+				<div class="form-group form-side-by-side" ng-class="{'input--hide-label': i18n}">
+					<!--<div class="form-side form-side-label">
+						<label for="{{k}}_{{item.set.id}}" class="ng-binding">Click to Select</label>
+					</div> -->
+					<div class="form-side">
+						<div class="form-check">
+							<input
+								id="{{k}}_{{item.set.id}}"
+								name="model[item.set.id][k]"
+								ng-true-value="1"								
+								ng-click="toggleValSel(item.set.id,k)"
+								ng-false-value="0"
+								ng-model="model[item.set.id][k]"
+								type="checkbox"       
+								checked="item.preSel.indexOf(k) !== -1"                        
+								class="form-check-input-standalone ng-pristine ng-untouched ng-valid ng-empty"
+								ng-checked="item.preSel.indexOf(k) !== -1"
+							/><label for="{{k}}_{{item.set.id}}">{{val}}</label>
+						</div>
+					</div>
+				</div>							
+		</div>	     
 	</div>
 </div>
 </div>

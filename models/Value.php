@@ -106,8 +106,9 @@ class Value extends NgRestModel
      */
     public static function getList($feature_id)
     {
-        return ArrayHelper::map(self::find()->andFilterWhere(['feature_id' => $feature_id])
-        ->orderBy('position')->all(), 'id', 'name');
+        $values = self::find()->andFilterWhere(['feature_id' => $feature_id])->orderBy('position')->all();
+        
+        return ArrayHelper::map($values, 'id', 'name');
     }
 
     public static function getListEx($feature_id, $group_id)

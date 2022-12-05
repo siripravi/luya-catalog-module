@@ -8,6 +8,8 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use app\modules\catalog\admin\plugins\ArticleFeaturesPlugin;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
+use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
+use app\modules\catalog\admin\behaviors\ManyToManyBehavior;
 
 /**
  * Article.
@@ -32,7 +34,7 @@ use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 class Article extends NgRestModel
 {
     public $adminFeatures = [];
-
+   
     public $i18n = ['name', 'code'];
     /**
      * @inheritdoc
@@ -59,6 +61,12 @@ class Article extends NgRestModel
             'updatedAtAttribute' => 'updated_at',
             'value' => new Expression('NOW()'),
         ],
+        [
+            'class' => ManyToManyBehavior::class,
+            'relations' => [
+                'value_ids' => ['setValues'],
+            ]
+        ] 
     ];
     }
 
@@ -96,14 +104,16 @@ class Article extends NgRestModel
            // [['price', 'price_old'], 'number'],
             [['code'], 'string', 'max' => 255],
             [['values'], 'safe'],
-            [['adminFeatures'], 'safe'],
+           // [['adminFeatures'], 'safe'],
+           
+            [['value_ids'], 'each', 'rule' => ['integer']]
         ];
     }
 
-    public function extraFields()
+   /* public function extraFields()
     {
-        return ['adminFeatures'];  //adminSets
-    }
+        return ['adminFeatures','adminFeatureValues'];  //adminSets
+    }*/
 
     public function ngRestActiveWindows()
     {
@@ -139,11 +149,12 @@ class Article extends NgRestModel
     public function ngRestExtraAttributeTypes()
     {
         return [
-            'adminFeatures' => [
+            /*'adminFeatures' => [
                 'class' => CheckboxRelationActiveQuery::class,
                 'query' => $this->getFeatures(),
                 'labelField' => ['name'],
-            ], 
+            ], */
+            
             'values' => [
                 'class' => ArticleFeaturesPlugin::class,
             ]
@@ -164,7 +175,7 @@ class Article extends NgRestModel
     {
         return [
             ['list', ['name','product_id', 'code', 'image_id', 'created_at', 'updated_at', 'enabled']],
-            [['create', 'update'], ['name','adminFeatures','product_id', 'code','values',  'image_id', 'enabled']],
+            [['create', 'update'], ['name','product_id', 'code','values',  'image_id', 'enabled']],
             ['delete', false],
         ];
     }
@@ -188,13 +199,18 @@ class Article extends NgRestModel
       
     }
 
+    public function getAttributeValues()
+    {
+        return $this->hasMany(ArticleValueRef::class, ['article_id' => 'id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getValues()
-    {
-        //$model = Article::find(['id'=>$id])->one();
+    {        
         $product = $this->product;
+        $value_ids = $this->value_ids;
         if($product->group_ids) 
            $features = Feature::getObjectList(true, $product->group_ids);
         else
@@ -204,46 +220,45 @@ class Article extends NgRestModel
         foreach ($features as $set) {
             $values = Value::getList($set->id);
             foreach($values as $i => $val){
-            $data[$set->id][$i] = $val;
+                $data[$set->id][$i] = $val;            
             
          }
-        }        
-        
-       
+       }
         return $data; 
         
     }
-    public function getAttributeValues()
-    {
-        return $this->hasMany(ArticleValueRef::class, ['article_id' => 'id']);
-    }
-
+  
     public function setValues($data)
-    {
-        
+    {        
         if ($this->isNewRecord) {
             $this->on(self::EVENT_AFTER_INSERT, function () use ($data) {
                 $this->updateSetValues($data);
             });
-        } else {  //print_r($data); die;
+        } else {  
             $this->updateValues($data);
         }
     }
 
     private function updateValues($data)
     {
-        
+        if(!empty($data)){
         $this->unlinkAll('attributeValues', true);
         
         foreach ($data as $setId => $values) {
             foreach ($values as $attributeId => $attributeValue) {
-                $model = new ArticleValueRef();
-                $model->article_id = $this->id;  //$attributeId;
-                //$model->value = $attributeValue;
-                $model->value_id = $attributeId;
-                $this->link('attributeValues', $model);
-            }
+                if($attributeValue == 1){
+                    $model = new ArticleValueRef();
+                    $model->article_id = $this->id;               
+                    $model->value_id = $attributeId;
+                    $this->link('attributeValues', $model);
+                }
+            } 
         }
+      }
+    }    
+    public function getSetValues()
+    {
+        return $this->hasMany(Value::class, ['id' => 'value_id'])->viaTable(ArticleValueRef::tableName(), ['article_id' => 'id']);
     }
    
 }

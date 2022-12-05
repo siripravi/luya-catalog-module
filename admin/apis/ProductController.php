@@ -25,31 +25,41 @@ class ProductController extends \luya\admin\ngrest\base\Api
      */
     public function actionFeatures($id)
     {
-        $features = [];
+        $features = []; $value_ids = [];
         $model = Article::find(['id'=>$id])->one();
         $product = $model->product;
+        $value_ids = $model->value_ids;
         if($product->group_ids) 
            $features = Feature::getObjectList(true, $product->group_ids);
         else
            $features = [];   
        
-        $data = [];        
+        $data = []; $featureVals = [];        
         foreach ($features as $set) {
-            $data[] = [
-                'set' => $set,
-                'attributes' => Value::getList($set->id),
+            $featureVals[] = [
+                'set' => $set,                
+                'attributes' => Value::getList($set->id), //foreach ($list as $i=> $item){
+                'preSel'  => array_values($value_ids)
             ];
-        }        
+        }   
+        $data['fVals'] = $featureVals;    
+        $data['preSel'] = array_values($value_ids);
+        $data['selected']= $this->setAttributes($value_ids, $model->getValues());  //($value_ids);
         return $data;
     }
 
-    public function setAttributes($feature_id){
-        $value_ids = [];
-        $list = Value::getList($feature->id);
-        foreach ($modelVariant->value_ids as $value_id) {
-            if (isset($list[$value_id])) {
-                $value_ids[] = $value_id;
+    public function setAttributes($value_ids,$featurs){      
+        $data = [];
+        foreach ($featurs as $key => $value) {
+            $keys = array_keys($value);
+            foreach($keys as $k){
+                if(in_array($k,$value_ids)){
+                    $data[$key][$k] = 1;
+                }
             }
-        }
+         
+        }  
+       // print_r($list);die;
+        return $data;
     }
 }
