@@ -6,22 +6,22 @@ use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 
 /**
- * Product Related.
+ * Related.
  * 
  * File has been created with `crud/create` command. 
  *
- * @property integer $product_id
- * @property integer $related_id
+ * @property integer $id
+ * @property string $name
  * @property integer $position
  */
-class ProductRelated extends NgRestModel
+class Related extends NgRestModel
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%catalog_product_related}}';
+        return 'catalog_related';
     }
 
     /**
@@ -29,7 +29,7 @@ class ProductRelated extends NgRestModel
      */
     public static function ngRestApiEndpoint()
     {
-        return 'api-catalog-productrelated';
+        return 'api-catalog-related';
     }
 
     /**
@@ -38,8 +38,8 @@ class ProductRelated extends NgRestModel
     public function attributeLabels()
     {
         return [
-            'product_id' => Yii::t('app', 'Product ID'),
-            'related_id' => Yii::t('app', 'Related ID'),
+            'id' => Yii::t('app', 'ID'),
+            'name' => Yii::t('app', 'Name'),
             'position' => Yii::t('app', 'Position'),
         ];
     }
@@ -50,9 +50,9 @@ class ProductRelated extends NgRestModel
     public function rules()
     {
         return [
-            [['product_id', 'related_id'], 'required'],
-            [['product_id', 'related_id', 'position'], 'integer'],
-            [['product_id', 'related_id'], 'unique', 'targetAttribute' => ['product_id', 'related_id']],
+            [['name'], 'required'],
+            [['position'], 'integer'],
+            [['name'], 'string', 'max' => 225],
         ];
     }
 
@@ -62,6 +62,7 @@ class ProductRelated extends NgRestModel
     public function ngRestAttributeTypes()
     {
         return [
+            'name' => 'text',
             'position' => 'number',
         ];
     }
@@ -72,8 +73,8 @@ class ProductRelated extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['position']],
-            [['create', 'update'], ['position']],
+            ['list', ['name', 'position']],
+            [['create', 'update'], ['name', 'position']],
             ['delete', false],
         ];
     }

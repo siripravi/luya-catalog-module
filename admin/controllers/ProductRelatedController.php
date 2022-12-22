@@ -12,5 +12,5 @@ class ProductRelatedController extends \luya\admin\ngrest\base\Controller
     /**
      * @var string The path to the model which is the provider for the rules and fields.
      */
-    public $modelClass = 'app\modules\catalog\models\ProductRelated';
+    public $modelClass = 'app\modules\catalog\models\ProductRelatedRef';
 }

@@ -10,7 +10,8 @@ use app\modules\catalog\admin\plugins\ArticleFeaturesPlugin;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
 use app\modules\catalog\admin\behaviors\ManyToManyBehavior;
-
+use luya\gallery\models\Album;
+use luya\helpers\Html;
 /**
  * Article.
  * 
@@ -33,6 +34,9 @@ use app\modules\catalog\admin\behaviors\ManyToManyBehavior;
  */
 class Article extends NgRestModel
 {
+    private $_price;
+    private $_currency;
+    
     public $adminFeatures = [];
    
     public $i18n = ['name', 'code'];
@@ -79,13 +83,15 @@ class Article extends NgRestModel
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Title'),            
             'product_id' => Yii::t('app', 'Product ID'),
+            'album_id'  => Yii::t('app', 'Image Gallery'),
             'code' => Yii::t('app', 'Code'),
             'price' => Yii::t('app', 'Price'),
             'price_old' => Yii::t('app', 'Price Old'),
             'currency_id' => Yii::t('app', 'Currency ID'),
             'unit_id' => Yii::t('app', 'Unit ID'),
+            
             'available' => Yii::t('app', 'Available'),
-            'image_id' => Yii::t('app', 'Image ID'),
+            'image_id' => Yii::t('app', 'Cover Image'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             //'position' => Yii::t('app', 'Position'),
@@ -99,8 +105,8 @@ class Article extends NgRestModel
     public function rules()
     {
         return [
-            [['name','product_id','unit_id'], 'required'],
-            [['product_id', 'unit_id', 'available', 'image_id', 'created_at', 'updated_at', 'position', 'enabled'], 'integer'],
+            [['name','product_id'], 'required'],
+            [['product_id', 'unit_id', 'available', 'image_id', 'album_id','created_at', 'updated_at', 'position', 'enabled'], 'integer'],
            // [['price', 'price_old'], 'number'],
             [['code'], 'string', 'max' => 255],
             [['values'], 'safe'],
@@ -132,13 +138,14 @@ class Article extends NgRestModel
             'name'   =>  'text',
             //'product_id' => 'number',
             'product_id' => ['selectModel', 'modelClass' => Product::class, 'valueField' => 'id', 'labelField' => 'name'],
+            'album_id' => ['selectModel', 'modelClass' => Album::class, 'valueField' => 'id', 'labelField' => 'title'],
             'code' => 'text',
             //'price' => 'decimal',
            // 'price_old' => 'decimal',
             //'currency_id' => 'number',
             'unit_id' => 'number',
            // 'available' => 'number',
-            'image_id' => 'number',
+            'image_id' => 'image',
             'created_at' => 'number',
             'updated_at' => 'number',
             'position' => 'number',
@@ -175,13 +182,33 @@ class Article extends NgRestModel
     {
         return [
             ['list', ['name','product_id', 'code', 'image_id', 'created_at', 'updated_at', 'enabled']],
-            [['create', 'update'], ['name','product_id', 'code','values',  'image_id', 'enabled']],
+            [['create', 'update'], ['name','product_id','album_id', 'code','values',  'image_id', 'enabled']],
             ['delete', false],
         ];
     }
 
     public function getProduct(){
         return $this->hasOne(Product::class,['id'=> 'product_id']);
+    }
+     
+    /**
+     * Get the Album.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAlbum()
+    {
+        return $this->hasOne(Album::class, ['id' => 'album_id']);
+    }
+
+     /**
+     * Get the Album.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getImages()
+    {
+        return $this->album->albumImages;
     }
 
     public function getGroups(){
@@ -259,6 +286,57 @@ class Article extends NgRestModel
     public function getSetValues()
     {
         return $this->hasMany(Value::class, ['id' => 'value_id'])->viaTable(ArticleValueRef::tableName(), ['article_id' => 'id']);
+    }
+
+    public static function getElements(){
+        $elements = self::find()->where(['enabled' => 1])->all();
+        $data = [];
+        foreach ($elements as $key=>$element) {
+            $data[$key] = $element;
+            $data[$key]['image_id'] = \Yii::$app->storage->getImage($element['image_id']);
+           // $data[$key]['img_max_id'] = \Yii::$app->storage->getImage($element['img_max_id']);
+        }
+        return $data;
+    }
+
+    public function getPricesDef(){
+        $curDef = $this->getCurrencyDef();
+        $rows = [];
+        foreach($this->prices as $price){
+            if($price->currency_id = $curDef->id){
+              $rows[] = Html::tag("td",$price->qty." ".$price->unit->name. " @ ".$curDef->before.$price->price.$curDef->after." Only");
+           }
+        }  
+        return Html::tag('tr', implode("\n", $rows));
+    }
+
+    public function getPriceDef()
+    {
+        
+        if (empty($this->_currency)) {
+            $this->_currency = Currency::findOne(1);  //Yii::$app->params['currency_id']);
+        }
+       
+        if (empty($this->_currency)) {
+            $price;
+        } else {
+            round($this->price * $this->_currency->rate);
+        }    
+    }
+
+    public function getCurrencyDef()
+    {
+       
+        if (empty($this->_currency)) {
+            $this->_currency = Currency::findOne(1) ;  //Yii::$app->params['currency_id']);
+        }
+
+        if (empty($this->_currency)) {
+           return $this->currency;
+        } else {
+            return  $this->_currency;
+        }
+        
     }
    
 }

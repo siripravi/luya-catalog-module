@@ -31,13 +31,13 @@ class Product extends NgRestModel
     /**
      * @inheritdoc
      */
-    public $i18n = ['name','slug', 'view'];
+    //public $i18n = ['name','slug', 'view'];
 
     /**
      * @var array
      */
     public $adminGroups = [];
-    
+    public $adminRelated = [];
     /**
      * @var array
      */
@@ -64,6 +64,7 @@ class Product extends NgRestModel
                     'class' => ManyToManyBehavior::class,
                     'relations' => [
                         'group_ids' => ['groups'],
+                        'related_ids' => ['related'],
                     ]
                 ]      
         ];
@@ -82,6 +83,7 @@ class Product extends NgRestModel
        // echo "<pre>"; print_r( $query); die;//->createCommand()->getRawSql(); die;
         return [
             ['label' => 'Articles', 'targetModel' => Article::class,'apiEndpoint' => Article::ngRestApiEndpoint(), 'dataProvider' => $this->getArticles()],
+           // ['label' => 'Related', 'targetModel' => ProductRelated::class,'apiEndpoint' => ProductRelated::ngRestApiEndpoint(), 'dataProvider' => $this->getRelated()],
         ];
     }
 
@@ -94,6 +96,8 @@ class Product extends NgRestModel
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Title'),
             'slug' => Yii::t('app', 'Slug'),
+            'cover_image_id' => Yii::t('app', 'Image'),
+            'text' => Yii::t('app', 'text'),
             'brand_id' => Yii::t('app', 'Brand ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -102,6 +106,7 @@ class Product extends NgRestModel
             'position' => Yii::t('app', 'Position'),
             'enabled' => Yii::t('app', 'Enabled'),
             'adminGroups' => 'Categories',
+            'adminRelated' => 'Related',
             //'adminSets' => 'Features',
         ];
     }
@@ -113,10 +118,13 @@ class Product extends NgRestModel
     {
         return [
             [['slug'], 'required'],
-            [['brand_id', 'created_at', 'updated_at', 'price_from', 'position', 'enabled'], 'integer'],
-            [['name','slug', 'view'], 'string', 'max' => 255],
-            [['adminGroups'], 'safe'],
-            [['group_ids'], 'each', 'rule' => ['integer']]
+            [['brand_id', 'created_at', 'updated_at', 'price_from','cover_image_id', 'position', 'enabled'], 'integer'],
+            [['name','slug', 'view','text'], 'string', 'max' => 255],
+            [['adminGroups'], 'safe'], 
+            [['adminRelated'], 'safe'],          
+            [['group_ids'], 'each', 'rule' => ['integer']],
+            [['related_ids'], 'each', 'rule' => ['integer']]
+            
         ];
     }
 
@@ -131,12 +139,13 @@ class Product extends NgRestModel
             //'brand_id'    => 'number',
             'brand_id'  =>  ['class' => SelectRelationActiveQuery::class, 'query' => $this->getBrands(), 'labelField' => ['name'], 'asyncList' => true],
             //'brand_id'      => ['selectModel', 'modelClass' => Brand::class],
+            'cover_image_id' => 'image',
             'created_at'    => 'number',
             'updated_at'    => 'number',
             'price_from'    => 'number',
             'view'          => 'text',
             'position'      => 'number',
-            'enabled'       => 'number',
+            'enabled' => ['toggleStatus', 'initValue' => 0],
         ];
     }
 
@@ -146,8 +155,8 @@ class Product extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name','slug', 'brand_id', 'created_at', 'updated_at', 'price_from', 'view', 'position', 'enabled']],
-            [['create', 'update'], ['name','slug', 'adminGroups', 'brand_id', 'price_from', 'view', 'position', 'enabled']],
+            ['list', ['name','cover_image_id', 'brand_id', 'created_at', 'updated_at', 'price_from', 'view', 'position', 'enabled']],
+            [['create', 'update'], ['name','slug','cover_image_id', 'adminGroups','adminRelated', 'brand_id', 'price_from', 'view', 'position', 'enabled']],
             ['delete', false],
         ];
     }
@@ -160,17 +169,22 @@ class Product extends NgRestModel
                 'query' => $this->getGroups(),
                 'labelField' => ['name'],
             ],
-          /*  'adminSets' => [
+            /*  'adminSets' => [
                 'class' => CheckboxRelationActiveQuery::class,
                 'query' => $this->getSets(),
                 'labelField' => ['name'],
             ]*/
+            'adminRelated' => [
+                'class' => CheckboxRelationActiveQuery::class,
+                'query' => $this->getRelated(),
+                'labelField' => ['name'],
+            ],
         ];
     }
 
     public function extraFields()
     {
-        return ['adminGroups'];  //adminSets
+        return ['adminGroups','adminRelated'];  //adminSets
     }
 
     public function getArticles()
@@ -192,6 +206,19 @@ class Product extends NgRestModel
     {
         return $this->hasOne(Brand::class, ['id' => 'brand_id']);
     }
+
+    public function getRelated()
+    {
+        return $this->hasMany(Related::class, ['id' => 'related_id'])->viaTable('catalog_product_related_ref', ['product_id' => 'id']);
+    }
+     
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOptions()
+    {
+        return $this->hasMany(Product::class, ['id' => 'set_id'])->viaTable('catalog_product_set_ref', ['product_id' => 'id']);
+    }
     
    /* public function getSets()
     {
@@ -204,5 +231,33 @@ class Product extends NgRestModel
         } else {
             $features = [];
         }
+    }
+
+    public static function viewPage($id)
+    {
+        if (is_numeric($id)) {
+            $page = self::find()->where(['id'=>$id])->one();
+        } else {
+            $page = self::find()->where(['slug'=>$id])->one();
+          //echo $page->id; die;  //->createCommand()->getRawSql(); die;
+        }
+        if ($page === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+        Yii::$app->view->params['page'] = $page;
+        Yii::$app->view->title = $page->name;
+        if ($page->text) {
+            Yii::$app->view->registerMetaTag([
+                'name' => 'text',
+                'content' => $page->text
+            ]);
+        }
+        /*if ($page->keywords) {
+            Yii::$app->view->registerMetaTag([
+                'name' => 'keywords',
+                'content' => $page->keywords
+            ]);
+        }*/
+        return $page;
     }
 }

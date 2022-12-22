@@ -13,8 +13,15 @@ use luya\admin\ngrest\base\NgRestModel;
  * @property integer $article_id
  * @property integer $value_id
  */
-class ArticleValueRef extends \yii\db\ActiveRecord
+class ArticleValueRef extends NgRestModel
 {
+     /**
+     * @inheritdoc
+     */
+    public static function ngRestApiEndpoint()
+    {
+        return 'api-catalog-articlevalueref';
+    }
     /**
      * @inheritdoc
      */

@@ -5,7 +5,7 @@ namespace app\modules\catalog\models;
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
-
+use app\modules\catalog\admin\behaviors\ManyToManyBehavior;
 /**
  * Feature.
  * 
@@ -28,6 +28,24 @@ class Feature extends NgRestModel
     {
         return 'catalog_feature';
     }
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+           
+            [
+                'class' => ManyToManyBehavior::class,
+                'relations' => [
+                    'article_ids' => ['articles'],
+                    'group_ids' => ['groups'],
+                    'filter_ids' => ['filters'],
+                ],
+            ],
+        ];
+    }
+
 
     /**
      * @inheritdoc
@@ -60,6 +78,9 @@ class Feature extends NgRestModel
             [['position', 'enabled'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['adminGroups'], 'safe'],
+            [['group_ids'], 'each', 'rule' => ['integer']],
+            [['article_ids'], 'each', 'rule' => ['integer']],
+            [['filter_ids'], 'each', 'rule' => ['integer']]
         ];
     }
 
@@ -162,5 +183,25 @@ class Feature extends NgRestModel
     {
         return self::find()->joinWith(['groups'])->andFilterWhere(['catalog_feature.enabled' => $enabled])->andFilterWhere(['group_id' => $category_ids])->orderBy('position')->all();
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFilters()
+    {
+        return $this->hasMany(Group::class, ['id' => 'group_id'])->viaTable('catalog_feature_filter', ['feature_id' => 'id']);
+    }
+
+     /**
+     * @param boolean|null $enabled
+     * @param array $category_ids
+     * @return @return MultilingualQuery|\yii\db\ActiveQuery
+     */
+    public static function getFilterList($enabled, array $category_ids)
+    {
+        return self::find()->joinWith(['filters'])->andFilterWhere(['catalog_feature.enabled' => $enabled])->andFilterWhere(['group_id' => $category_ids])->orderBy('position')->all();
+    }
+
+
 
 }

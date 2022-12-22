@@ -1,16 +1,56 @@
 <?php
 
 namespace app\modules\catalog\frontend;
-
+use yii;
 /**
- * Catalog Frontend Module.
+ * Portfolio Admin Module.
  *
- * File has been created with `module/create` command. 
- * 
- * @author
- * @since 1.0.0
+ * File has been created with `module/create` command on LUYA version 1.0.0. 
  */
 class Module extends \luya\base\Module
 {
+    public $useAppViewPath = false;
 
+    public static function onLoad()
+    {
+        Yii::setAlias('@luyathemes', static::staticBasePath());
+    
+        self::registerTranslation('luyathemes*', '@luyathemes/messages', [
+            'luyathemes' => 'luyathemes.php',
+        ]);
+        
+        parent::onLoad();
+    }
+    /**
+     * @inheritdoc
+     */
+    public $urlRules = [
+       // ['pattern' => 'gallery/kategorie/<catId:\d+>/<title:[a-zA-Z0-9\-]+>/', 'route' => ''],
+        //['pattern' => 'gallery/album/<albumId:\d+>/<title:[a-zA-Z0-9\-]+>/', 'route' => ''],
+
+        ['pattern' => 'catalog/page-<page:[0-9]+>', 'route' => 'catalog/category/index'],
+        ['pattern' => 'catalog', 'route' => 'catalog/category/pod'],
+        ['pattern' => 'catalog/<slug:[0-9a-z\-]+>/page-<page:[0-9]+>', 'route' => ''],
+        ['pattern' => 'catalog/<slug:[0-9a-z\-]+>', 'route' => 'catalog/category/pod'],
+        ['pattern' => 'menu/<slug:[0-9a-z\-]+>/page-<page:[0-9]+>', 'route' => 'catalog/category/view'],
+        ['pattern' => 'menu/<slug:[0-9a-z\-]+>', 'route' => 'catalog/category/view'],
+        ['pattern' => 'product-detail/<slug:[0-9a-z\-]+>', 'route' => 'catalog/product/index'],
+        ['pattern' => 'product/<slug:[0-9a-z\-]+>', 'route' => 'catalog/product/index'],
+        [
+            'pattern' => 'my-basket',
+            'route' => 'catalog/default/basket',
+        ],       
+        
+        
+    ];
+
+    /**
+     * @var string Default route for this module: controller/action
+     */
+    public $defaultRoute = 'category';
+
+    public static function t($message, array $params = [], $language = null)
+    {
+        return parent::baseT('luyathemes', $message, $params, $language);
+    }
 }

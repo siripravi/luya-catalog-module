@@ -1,8 +1,10 @@
+{{model}}
 <div class="row">
 <div class="card col-4 mb-3" ng-repeat="item in data" ng-class="{'card-closed': !groupVisibility}" ng-init="groupVisibility=1">
 	<div class="card-header text-uppercase" ng-click="groupVisibility=!groupVisibility">
 		<span class="material-icons card-toggle-indicator">keyboard_arrow_down</span>
-		{{ item.set.name }}
+		{{ item.set.name }} - {{item.attributes.length}}
+		
 	</div>
 	<div class="card-body" ng-show="groupVisibility">
 		<div ng-repeat="(k, val) in item.attributes">

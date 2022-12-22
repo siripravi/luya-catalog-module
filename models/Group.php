@@ -7,6 +7,11 @@ use luya\admin\ngrest\base\NgRestModel;
 use yii\behaviors\TimestampBehavior;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use yii\db\Expression;
+use luya\admin\traits\SortableTrait;
+use yii\helpers\ArrayHelper;
+
+use app\components\Category;
+use app\components\Page;
 /**
  * Group.
  * 
@@ -27,6 +32,7 @@ use yii\db\Expression;
  */
 class Group extends NgRestModel
 {
+    use SortableTrait;
     public $adminFeatures = [];
     /**
      * @inheritdoc
@@ -46,6 +52,14 @@ class Group extends NgRestModel
             'value' => new Expression('NOW()'),
         ],
     ];
+    }
+
+    /**
+     * @return string
+     */
+    public static function sortableField()
+    {
+        return 'position';
     }
     /**
      * @inheritdoc
@@ -71,7 +85,7 @@ class Group extends NgRestModel
             'name'      => Yii::t('app', 'Title'),
             'slug' => Yii::t('app', 'Slug'),
             'cover_image_id' => Yii::t('app', 'Cover Image ID'),
-            'images_list' => Yii::t('app', 'Images List'),
+           // 'images_list' => Yii::t('app', 'Images List'),
             'teaser' => Yii::t('app', 'Teaser'),
             'text' => Yii::t('app', 'Text'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -91,7 +105,7 @@ class Group extends NgRestModel
         return [
             [['parent_id', 'cover_image_id', 'created_at', 'updated_at','main', 'position', 'enabled'], 'integer'],
             [['slug'], 'required'],
-            [['images_list', 'text', 'name'], 'string'],
+            [[ 'text', 'name'], 'string'],
             [['slug', 'teaser'], 'string', 'max' => 255],
             [['adminFeatures'], 'safe'],
         ];
@@ -107,14 +121,14 @@ class Group extends NgRestModel
             'name'      => 'text',
             'slug' => 'text',
             'cover_image_id' => 'image',
-            'images_list' => 'imageArray',
+            //'images_list' => 'imageArray',
             'teaser' => 'text',
             'text' => 'textarea',
             'created_at' => 'number',
             'updated_at' => 'number',
             'main' => 'number',
             'position' => 'number',
-            'enabled' => 'number',
+            'enabled' => ['toggleStatus', 'initValue' => 0],
         ];
     }
 
@@ -132,7 +146,7 @@ class Group extends NgRestModel
     {
         return [
             ['list', ['name','parent_id', 'cover_image_id', 'teaser', 'text', 'created_at', 'updated_at', 'main', 'position', 'enabled']],
-            [['create', 'update'], ['name','parent_id', 'slug', 'cover_image_id', 'images_list', 'teaser', 'text', 'main', 'position','adminFeatures', 'enabled']],
+            [['create', 'update'], ['name','parent_id', 'slug', 'cover_image_id',  'teaser', 'text', 'main', 'position','adminFeatures', 'enabled']],
             ['delete', false],
         ];
     }
@@ -153,5 +167,79 @@ class Group extends NgRestModel
        ];
     }
 
+    /**
+     * @return array
+     */
+    public static function getMenu(){
+        return ArrayHelper::map(self::find()->where(['enabled' => 1])->all(), 'id', 'group_name');
+    }
 
+    /**
+     * @return \yii\db\ActiveQuery[]
+     */
+    public static function getMain()
+    {
+        return self::find()->where(['enabled' => true, 'main' => true])->orderBy(['position' => SORT_ASC])->all();
+    }
+
+    public static function viewPage($id)
+    {
+        if (is_numeric($id)) {
+            $page = self::findOne($id);
+        } else {
+            $page = self::findOne(['slug' => $id]);
+        }
+        if ($page === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+        Yii::$app->view->params['page'] = $page;
+        Yii::$app->view->title = $page->name;
+        if ($page->text) {
+            Yii::$app->view->registerMetaTag([
+                'name' => 'description',
+                'content' => $page->text
+            ]);
+        }
+      /*  if ($page->keywords) {
+            Yii::$app->view->registerMetaTag([
+                'name' => 'keywords',
+                'content' => $page->keywords
+            ]);
+        }*/
+        return $page;
+    }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategories()
+    {
+        return $this->hasMany(Group::class, ['parent_id' => 'id']);
+    }
+
+    public static function getElements(){
+        $categories = !Yii::$app->cache->exists('_categories-' . Yii::$app->language) ? Group::getMain() : [];
+        //$categories = Group::getMain();
+        $query = Product::find();
+        $query->joinWith(['groups']);
+        $query->andWhere(['catalog_product.enabled' => true]);
+        $query->andWhere(['catalog_group.enabled' => true]);
+        /*$dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort'=> [
+                'defaultOrder' => [
+                    'position' => SORT_DESC,
+                ],
+            ],
+            'pagination' => [
+                'forcePageParam' => false,
+                'pageSizeParam' => false,
+                'pageSize' => 12,
+            ],
+        ]);*/
+        return [
+            'categories' => $categories,
+           // 'dataProvider' => $dataProvider
+        ];
+    }
 }

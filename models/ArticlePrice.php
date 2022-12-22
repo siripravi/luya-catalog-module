@@ -18,6 +18,7 @@ use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
  */
 class ArticlePrice extends NgRestModel
 {
+    public $adminValues = [];
     /**
      * @inheritdoc
      */
@@ -45,6 +46,7 @@ class ArticlePrice extends NgRestModel
             'qty' => Yii::t('app', 'Qty'),
             'price' => Yii::t('app', 'Price'),
             'unit_id' => Yii::t('app', 'Unit'),
+            'value_id' => Yii::t('app', 'Feature Value'),
         ];
     }
 
@@ -55,7 +57,7 @@ class ArticlePrice extends NgRestModel
     {
         return [
             [['article_id', 'currency_id', 'qty', 'price','unit_id'], 'required'],
-            [['article_id', 'currency_id', 'qty','unit_id'], 'integer'],
+            [['article_id', 'currency_id', 'qty','unit_id','value_id'], 'integer'],
             [['price'], 'number'],
         ];
     }
@@ -75,11 +77,29 @@ class ArticlePrice extends NgRestModel
     {
         return [
             'article_id'  =>  ['class' => SelectRelationActiveQuery::class, 'query' => $this->getArticle(), 'labelField' => ['name'], 'asyncList' => true],
+            'value_id'  =>  ['class' => SelectRelationActiveQuery::class, 'query' => $this->getValues(), 'labelField' => ['name'], 'asyncList' => true],
             'currency_id' =>  ['class' => SelectRelationActiveQuery::class, 'query' => $this->getCurrency(), 'labelField' => ['name'], 'asyncList' => true],
             'unit_id' =>  ['class' => SelectRelationActiveQuery::class, 'query' => $this->getUnit(), 'labelField' => ['name'], 'asyncList' => true],
             'qty' => 'number',
             'price' => 'decimal',
         ];
+    }
+
+    public function ngRestExtraAttributeTypes()
+    {
+        return [
+           /* 'adminValues' => [
+                'class' => CheckboxRelationActiveQuery::class,
+                'query' => $this->getValues(),
+                'labelField' => ['name'],
+            ],
+           */
+        ];
+    }
+
+    public function extraFields()
+    {
+        return [];  //adminSets
     }
     
     /**
@@ -106,14 +126,21 @@ class ArticlePrice extends NgRestModel
         return $this->hasOne(Unit::class, ['id' => 'unit_id']);
     }
 
+    public function getValues()
+    {
+        return $this->hasMany(Value::class, ['id' => 'value_id'])->viaTable(ArticleValueRef::tableName(), ['value_id' => 'id'])->where(['article_id']);
+        //return $this->hasMany(ArticleValueRef::class, ['article_id' => 'id']);
+    
+    }
+
     /**
      * @inheritdoc
      */
     public function ngRestScopes()
     {
         return [
-            ['list', ['article_id', 'currency_id', 'price','qty','unit_id']],
-            [['create', 'update'], ['article_id', 'currency_id', 'unit_id','qty', 'price']],
+            ['list', ['article_id', 'value_id','currency_id', 'price','qty','unit_id']],
+            [['create', 'update'], ['article_id', 'value_id','currency_id', 'unit_id','qty', 'price']],
             ['delete', true],
         ];
     }
