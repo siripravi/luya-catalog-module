@@ -89,7 +89,7 @@ class Article extends NgRestModel
             'price_old' => Yii::t('app', 'Price Old'),
             'currency_id' => Yii::t('app', 'Currency ID'),
             'unit_id' => Yii::t('app', 'Unit ID'),
-            
+            'text'  => Yii::t('app', 'Description'),
             'available' => Yii::t('app', 'Available'),
             'image_id' => Yii::t('app', 'Cover Image'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -109,7 +109,7 @@ class Article extends NgRestModel
             [['product_id', 'unit_id', 'available', 'image_id', 'album_id','created_at', 'updated_at', 'position', 'enabled'], 'integer'],
            // [['price', 'price_old'], 'number'],
             [['code'], 'string', 'max' => 255],
-            [['values'], 'safe'],
+            [['values','text'], 'safe'],
            // [['adminFeatures'], 'safe'],
            
             [['value_ids'], 'each', 'rule' => ['integer']]
@@ -140,6 +140,7 @@ class Article extends NgRestModel
             'product_id' => ['selectModel', 'modelClass' => Product::class, 'valueField' => 'id', 'labelField' => 'name'],
             'album_id' => ['selectModel', 'modelClass' => Album::class, 'valueField' => 'id', 'labelField' => 'title'],
             'code' => 'text',
+            'text' => 'textarea',
             //'price' => 'decimal',
            // 'price_old' => 'decimal',
             //'currency_id' => 'number',
@@ -182,7 +183,7 @@ class Article extends NgRestModel
     {
         return [
             ['list', ['name','product_id', 'code', 'image_id', 'created_at', 'updated_at', 'enabled']],
-            [['create', 'update'], ['name','product_id','album_id', 'code','values',  'image_id', 'enabled']],
+            [['create', 'update'], ['name','product_id','album_id', 'code','values',  'image_id','text', 'enabled']],
             ['delete', false],
         ];
     }
@@ -299,15 +300,49 @@ class Article extends NgRestModel
         return $data;
     }
 
-    public function getPricesDef(){
+    public function getPricesDef($feature_id = null){
+       // $article = self::findOne($article_id);
         $curDef = $this->getCurrencyDef();
         $rows = [];
-        foreach($this->prices as $price){
-            if($price->currency_id = $curDef->id){
-              $rows[] = Html::tag("td",$price->qty." ".$price->unit->name. " @ ".$curDef->before.$price->price.$curDef->after." Only");
+        $priceList = [];
+        $value_ids = [];
+        $index = $this->id;
+        $list = Value::getList($feature_id);
+        $value_ids = $this->value_ids;  
+        foreach ( $list as $key => $item) {
+            if (in_array($key, $value_ids)) {
+                //$value_ids[] = $value_id;
+             //   unset($list[$key]);
+
+                $priceList[$key] =[
+                    'label' => $item,
+                    'price' => '0',
+                    'priceLabel' => $item.'   - Not Available' 
+                ];
            }
+        }     
+        foreach($this->prices as $price){
+           
+            if(in_array($price->value_id, $value_ids)){
+                if($price->currency_id = $curDef->id){
+                    $pLabel = $price->qty." ".$price->unit->name. " @ ".$curDef->before.$price->price.$curDef->after." Only";
+                 }
+                if(isset($list[$price->value_id])){
+                    $priceList[$price->value_id] = 
+                    [
+                        'label'  => $list[$price->value_id],
+                        'price'  => $price->price,
+                        'priceLabel' =>$list[$price->value_id]."  -".$pLabel
+                    ];
+                 }   
+            }
+        /*    if($price->currency_id = $curDef->id){
+              $rows[] = Html::tag("td",$price->qty." ".$price->unit->name. " @ ".$curDef->before.$price->price.$curDef->after." Only");
+           }*/
         }  
-        return Html::tag('tr', implode("\n", $rows));
+
+        return $priceList;
+       // return Html::tag('tr', implode("\n", $rows));
     }
 
     public function getPriceDef()
@@ -338,5 +373,5 @@ class Article extends NgRestModel
         }
         
     }
-   
+    
 }

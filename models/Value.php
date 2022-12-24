@@ -91,6 +91,7 @@ class Value extends NgRestModel
     {
         return $this->hasOne(Feature::class, ['id' => 'feature_id']);
     }
+    
 
     /**
      * @return \yii\db\ActiveQuery
@@ -111,6 +112,8 @@ class Value extends NgRestModel
         return ArrayHelper::map($values, 'id', 'name');
     }
 
+    
+
     public static function getListEx($feature_id, $group_id)
     {
         $query = self::find();
@@ -119,7 +122,7 @@ class Value extends NgRestModel
         $query->andWhere(['feature_id' => $feature_id]);
         $query->andWhere(['group_id' => $group_id]);
         $query->andWhere(['catalog_article.enabled' => true]);
-        $query->andWhere(['nxt_product.enabled' => true]);
+        $query->andWhere(['catalog_product.enabled' => true]);
         $ids = $query->select('catalog_value.id')->groupBy(['catalog_value.id'])->column();
 
         return ArrayHelper::map(self::find()->andFilterWhere(['feature_id' => $feature_id])->where(['id' => $ids])->orderBy('position')->all(), 'id', 'name');

@@ -5,6 +5,7 @@ use app\modules\catalog\frontend\components\BaseController;
 //use app\models\Review;
 //use app\models\ReviewForm;
 use app\modules\catalog\models\Product;
+use app\modules\catalog\models\Feature;
 //use app\traits\BlockTrait;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -18,6 +19,7 @@ class ProductController extends BaseController
     public function actionIndex($slug)
     {    //echo $slug; die;
         $model = Product::viewPage($slug);
+       
       /*  echo "<pre>";
         print_r($slug);
         die;  */
@@ -106,11 +108,13 @@ class ProductController extends BaseController
                 'value' => 0,
             ];
         }*/
-
+        $features = Feature::getObjectList(true, $model->group_ids);
+       // $features = Feature::getFilterList(true, [$searchModel->category_id]);
         return $this->render('container', [
             'model' => $model,
             'viewed' => $viewed,
-            'similar' => $similar,
+            'similar' => $similar,                    
+            'features' => $features,
           //  'reviewForm' => $reviewForm,
            // 'dataProvider' => $dataProvider,
           //  'rating' => $rating,

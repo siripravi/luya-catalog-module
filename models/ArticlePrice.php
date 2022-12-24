@@ -144,4 +144,23 @@ class ArticlePrice extends NgRestModel
             ['delete', true],
         ];
     }
+
+     /**
+     * @param integer|null $feature_id
+     * @return array
+     */
+    public static function getPriceList($article_id, $feature_id)
+    {
+         
+        $values = self::find()
+                ->joinWith('values')
+               // ->joinWith(['values.feature'])
+                ->andFilterWhere(['article_id' => $article_id])
+                ->andFilterWhere(['feature_id' => $feature_id])
+                ->orderBy('position')
+                ->all();        
+        
+        return ArrayHelper::map($values, 'id', 'name');
+        
+    }
 }

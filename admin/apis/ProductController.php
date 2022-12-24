@@ -5,6 +5,7 @@ namespace app\modules\catalog\admin\apis;
 use app\modules\catalog\models\Article;
 use app\modules\catalog\models\Feature;
 use app\modules\catalog\models\Value;
+use app\modules\catalog\models\ArticleValueRef;
 use yii\helpers\JSON;
 /**
  * Product Controller.
@@ -28,18 +29,34 @@ class ProductController extends \luya\admin\ngrest\base\Api
         $features = []; $value_ids = [];
         $model = Article::find(['id'=>$id])->one();
         $product = $model->product;
-        $value_ids = $model->value_ids;
+        $value_ids = ArticleValueRef::getList($id); //["28", "29", "30"];  //$model->value_ids;
+      //  print_r($value_ids); die;
         if($product->group_ids) 
            $features = Feature::getObjectList(true, $product->group_ids);
         else
-           $features = [];   
+            $features = [];    
+        $list = []; 
        
-        $data = []; $featureVals = [];        
+        /*foreach ($features as $set) {
+            foreach ($model->value_ids as $value_id) {
+                if (in_array($value_id,$list)) {
+                    $value_ids[] = $value_id;
+                }
+            }       
+        }*/
+        $data = []; $featureVals = []; 
+       /* $list = ArticleValueRef::getList($id);
+        foreach ($model->value_ids as $value_id) {
+            if (in_array($value_id,$list)) {
+                $value_ids[] = $value_id;
+            }
+        }   */  
         foreach ($features as $set) {
+            
             $featureVals[] = [
                 'set' => $set,                
                 'attributes' => Value::getList($set->id), //foreach ($list as $i=> $item){
-                'preSel'  => array_values($value_ids)
+                'preSel'  => $value_ids
             ];
         }   
         $data['fVals'] = $featureVals;    

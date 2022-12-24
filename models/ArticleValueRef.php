@@ -4,7 +4,7 @@ namespace app\modules\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
-
+use yii\helpers\ArrayHelper;
 /**
  * Article Value Ref.
  * 
@@ -53,5 +53,28 @@ class ArticleValueRef extends NgRestModel
             [['article_id', 'value_id'], 'unique', 'targetAttribute' => ['article_id', 'value_id']],
         ];
     }
-   
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getValue()
+    {
+        return $this->hasOne(Value::class, ['id' => 'value_id']);
+    }
+
+    /**
+     * @param integer|null $feature_id
+     * @return array
+     */
+    public static function getList($article_id)
+    {
+        $values = self::find()->where(['article_id' => $article_id])->all();
+        
+        return ArrayHelper::getColumn($values,function ($element) {
+            return strval($element['value_id']);
+       });
+           
+    }
+
+     
 }

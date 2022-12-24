@@ -26,7 +26,7 @@
 								checked="item.preSel.indexOf(k) !== -1"                        
 								class="form-check-input-standalone ng-pristine ng-untouched ng-valid ng-empty"
 								ng-checked="item.preSel.indexOf(k) !== -1"
-							/><label for="{{k}}_{{item.set.id}}">{{val}}</label>
+							/><label for="{{k}}_{{item.set.id}}">{{val}}-{{k}}</label>
 						</div>
 					</div>
 				</div>							
