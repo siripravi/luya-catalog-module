@@ -1,7 +1,7 @@
 {
   "name": "siripravi/catalog",
   "description": "Luya module for ecommerce",
-  "type": "yii2-module",
+  "type": "luya-module",
   "keywords": [
     "luya"
   ],
