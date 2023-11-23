@@ -1,6 +1,6 @@
 {
   "name": "siripravi/catalog",
-  "description": "Luya category tree administration",
+  "description": "Luya module for ecommerce",
   "type": "yii2-module",
   "keywords": [
     "luya"
@@ -14,7 +14,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "siripravi\\catalog\\admin\\": "src/"
+      "siripravi\\catalog\\": "src/"
     }
   },
   "config": {
