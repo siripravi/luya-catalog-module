@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
 
 use app\components\Category;
 use app\components\Page;
+
 /**
  * Group.
  * 
@@ -44,14 +45,14 @@ class Group extends NgRestModel
 
     public function behaviors()
     {
-    return [
-        [
-            'class' => TimestampBehavior::class,
-            'createdAtAttribute' => 'created_at',
-            'updatedAtAttribute' => 'updated_at',
-            'value' => new Expression('NOW()'),
-        ],
-    ];
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 
     /**
@@ -85,7 +86,7 @@ class Group extends NgRestModel
             'name'      => Yii::t('app', 'Title'),
             'slug' => Yii::t('app', 'Slug'),
             'cover_image_id' => Yii::t('app', 'Cover Image ID'),
-           // 'images_list' => Yii::t('app', 'Images List'),
+            // 'images_list' => Yii::t('app', 'Images List'),
             'teaser' => Yii::t('app', 'Teaser'),
             'text' => Yii::t('app', 'Text'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -103,9 +104,9 @@ class Group extends NgRestModel
     public function rules()
     {
         return [
-            [['parent_id', 'cover_image_id', 'created_at', 'updated_at','main', 'position', 'enabled'], 'integer'],
+            [['parent_id', 'cover_image_id', 'created_at', 'updated_at', 'main', 'position', 'enabled'], 'integer'],
             [['slug'], 'required'],
-            [[ 'text', 'name'], 'string'],
+            [['text', 'name'], 'string'],
             [['slug', 'teaser'], 'string', 'max' => 255],
             [['adminFeatures'], 'safe'],
         ];
@@ -145,8 +146,8 @@ class Group extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name','parent_id', 'cover_image_id', 'teaser', 'text', 'created_at', 'updated_at', 'main', 'position', 'enabled']],
-            [['create', 'update'], ['name','parent_id', 'slug', 'cover_image_id',  'teaser', 'text', 'main', 'position','adminFeatures', 'enabled']],
+            ['list', ['name', 'parent_id', 'cover_image_id', 'teaser', 'text', 'created_at', 'updated_at', 'main', 'position', 'enabled']],
+            [['create', 'update'], ['name', 'parent_id', 'slug', 'cover_image_id',  'teaser', 'text', 'main', 'position', 'adminFeatures', 'enabled']],
             ['delete', false],
         ];
     }
@@ -164,13 +165,14 @@ class Group extends NgRestModel
                 'query' => $this->getFeatures(),
                 'labelField' => ['name'],
             ],
-       ];
+        ];
     }
 
     /**
      * @return array
      */
-    public static function getMenu(){
+    public static function getMenu()
+    {
         return ArrayHelper::map(self::find()->where(['enabled' => 1])->all(), 'id', 'group_name');
     }
 
@@ -200,7 +202,7 @@ class Group extends NgRestModel
                 'content' => $page->text
             ]);
         }
-      /*  if ($page->keywords) {
+        /*  if ($page->keywords) {
             Yii::$app->view->registerMetaTag([
                 'name' => 'keywords',
                 'content' => $page->keywords
@@ -209,7 +211,7 @@ class Group extends NgRestModel
         return $page;
     }
 
-     /**
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getCategories()
@@ -217,7 +219,8 @@ class Group extends NgRestModel
         return $this->hasMany(Group::class, ['parent_id' => 'id']);
     }
 
-    public static function getElements(){
+    public static function getElements()
+    {
         $categories = !Yii::$app->cache->exists('_categories-' . Yii::$app->language) ? Group::getMain() : [];
         //$categories = Group::getMain();
         $query = Product::find();
@@ -239,7 +242,7 @@ class Group extends NgRestModel
         ]);*/
         return [
             'categories' => $categories,
-           // 'dataProvider' => $dataProvider
+            // 'dataProvider' => $dataProvider
         ];
     }
 }

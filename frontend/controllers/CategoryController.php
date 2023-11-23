@@ -1,13 +1,14 @@
 <?php
 
-namespace app\modules\catalog\frontend\controllers;
-use app\modules\catalog\frontend\components\BaseController;
-use app\modules\catalog\frontend\components\Category;
+namespace siripravi\catalog\frontend\controllers;
+
+use siripravi\catalog\frontend\components\BaseController;
+use siripravi\catalog\frontend\components\Category;
 //use app\components\Page;
-use app\modules\catalog\models\Group;
-use app\modules\catalog\models\Feature;
-use app\modules\catalog\models\Product;
-use app\modules\catalog\models\ProductFilter;
+use siripravi\catalog\models\Group;
+use siripravi\catalog\models\Feature;
+use siripravi\catalog\models\Product;
+use siripravi\catalog\models\ProductFilter;
 use Yii;
 use yii\web\Controller;
 use yii\data\ActiveDataProvider;
@@ -18,7 +19,7 @@ class CategoryController extends BaseController
 {
     public function actionIndex()
     {
-       /* if (!$page = Page::viewPage("category",true)) {
+        /* if (!$page = Page::viewPage("category",true)) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }*/
 
@@ -30,7 +31,7 @@ class CategoryController extends BaseController
         $query->andWhere(['catalog_group.enabled' => true]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> [
+            'sort' => [
                 'defaultOrder' => [
                     'position' => SORT_DESC,
                 ],
@@ -43,7 +44,7 @@ class CategoryController extends BaseController
         ]);
 
         return $this->render('index', [
-           // 'page' => $page,
+            // 'page' => $page,
             'categories' => $categories,
             'dataProvider' => $dataProvider,
         ]);
@@ -51,7 +52,7 @@ class CategoryController extends BaseController
 
     public function actionPod($slug)
     {
-        $page = Group::viewPage($slug,true);
+        $page = Group::viewPage($slug, true);
 
         /** @var $category Category */
         $category = Group::find()->where(['slug' => $slug])->one();
@@ -66,7 +67,7 @@ class CategoryController extends BaseController
 
     public function actionView($slug)
     {
-        $page = Category::viewPage($slug,true);
+        $page = Category::viewPage($slug, true);
 
         if (!empty(Yii::$app->params['templateTitleCategory_' . Yii::$app->language])) {
             $page->title = str_replace('{0}', $page->h1, Yii::$app->params['templateTitleCategory_' . Yii::$app->language]);
@@ -97,5 +98,4 @@ class CategoryController extends BaseController
             'features' => $features,
         ]);
     }
-
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace app\modules\catalog\frontend\components;
-use app\modules\catalog\models\Group;
+namespace siripravi\catalog\frontend\components;
+
+use siripravi\catalog\models\Group;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -30,7 +31,7 @@ class Category extends Group
             ], 'description');
         }
 
-       /* if ($page->keywords) {
+        /* if ($page->keywords) {
             Yii::$app->view->registerMetaTag([
                 'name' => 'keywords',
                 'content' => $page->keywords
@@ -57,5 +58,4 @@ class Category extends Group
     {
         return $this->hasOne(Group::class, ['id' => 'parent_id']);
     }
-
 }

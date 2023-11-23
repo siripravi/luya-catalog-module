@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\admin\controllers;
+namespace siripravi\catalog\admin\controllers;
 
 /**
  * Attr Group Ref Controller.
@@ -12,5 +12,5 @@ class AttrGroupRefController extends \luya\admin\ngrest\base\Controller
     /**
      * @var string The path to the model which is the provider for the rules and fields.
      */
-    public $modelClass = 'app\modules\catalog\models\AttrGroupRef';
+    public $modelClass = 'siripravi\catalog\models\AttrGroupRef';
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
@@ -56,8 +56,8 @@ class ArticlePrice extends NgRestModel
     public function rules()
     {
         return [
-            [['article_id', 'currency_id', 'qty', 'price','unit_id'], 'required'],
-            [['article_id', 'currency_id', 'qty','unit_id','value_id'], 'integer'],
+            [['article_id', 'currency_id', 'qty', 'price', 'unit_id'], 'required'],
+            [['article_id', 'currency_id', 'qty', 'unit_id', 'value_id'], 'integer'],
             [['price'], 'number'],
         ];
     }
@@ -88,20 +88,19 @@ class ArticlePrice extends NgRestModel
     public function ngRestExtraAttributeTypes()
     {
         return [
-           /* 'adminValues' => [
+            /* 'adminValues' => [
                 'class' => CheckboxRelationActiveQuery::class,
                 'query' => $this->getValues(),
                 'labelField' => ['name'],
             ],
-           */
-        ];
+           */];
     }
 
     public function extraFields()
     {
         return [];  //adminSets
     }
-    
+
     /**
      * @return Article
      */
@@ -109,7 +108,7 @@ class ArticlePrice extends NgRestModel
     {
         return $this->hasOne(Article::class, ['id' => 'article_id']);
     }
-    
+
     /**
      * @return Currency
      */
@@ -130,7 +129,7 @@ class ArticlePrice extends NgRestModel
     {
         return $this->hasMany(Value::class, ['id' => 'value_id'])->viaTable(ArticleValueRef::tableName(), ['value_id' => 'id'])->where(['article_id']);
         //return $this->hasMany(ArticleValueRef::class, ['article_id' => 'id']);
-    
+
     }
 
     /**
@@ -139,28 +138,27 @@ class ArticlePrice extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['article_id', 'value_id','currency_id', 'price','qty','unit_id']],
-            [['create', 'update'], ['article_id', 'value_id','currency_id', 'unit_id','qty', 'price']],
+            ['list', ['article_id', 'value_id', 'currency_id', 'price', 'qty', 'unit_id']],
+            [['create', 'update'], ['article_id', 'value_id', 'currency_id', 'unit_id', 'qty', 'price']],
             ['delete', true],
         ];
     }
 
-     /**
+    /**
      * @param integer|null $feature_id
      * @return array
      */
     public static function getPriceList($article_id, $feature_id)
     {
-         
+
         $values = self::find()
-                ->joinWith('values')
-               // ->joinWith(['values.feature'])
-                ->andFilterWhere(['article_id' => $article_id])
-                ->andFilterWhere(['feature_id' => $feature_id])
-                ->orderBy('position')
-                ->all();        
-        
+            ->joinWith('values')
+            // ->joinWith(['values.feature'])
+            ->andFilterWhere(['article_id' => $article_id])
+            ->andFilterWhere(['feature_id' => $feature_id])
+            ->orderBy('position')
+            ->all();
+
         return ArrayHelper::map($values, 'id', 'name');
-        
     }
 }

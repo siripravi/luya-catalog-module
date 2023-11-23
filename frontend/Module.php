@@ -1,7 +1,9 @@
 <?php
 
-namespace app\modules\catalog\frontend;
+namespace siripravi\catalog\frontend;
+
 use yii;
+
 /**
  * Portfolio Admin Module.
  *
@@ -14,18 +16,18 @@ class Module extends \luya\base\Module
     public static function onLoad()
     {
         Yii::setAlias('@luyathemes', static::staticBasePath());
-    
+
         self::registerTranslation('luyathemes*', '@luyathemes/messages', [
             'luyathemes' => 'luyathemes.php',
         ]);
-        
+
         parent::onLoad();
     }
     /**
      * @inheritdoc
      */
     public $urlRules = [
-       // ['pattern' => 'gallery/kategorie/<catId:\d+>/<title:[a-zA-Z0-9\-]+>/', 'route' => ''],
+        // ['pattern' => 'gallery/kategorie/<catId:\d+>/<title:[a-zA-Z0-9\-]+>/', 'route' => ''],
         //['pattern' => 'gallery/album/<albumId:\d+>/<title:[a-zA-Z0-9\-]+>/', 'route' => ''],
 
         ['pattern' => 'catalog/page-<page:[0-9]+>', 'route' => 'catalog/category/index'],
@@ -39,9 +41,9 @@ class Module extends \luya\base\Module
         [
             'pattern' => 'my-basket',
             'route' => 'catalog/default/basket',
-        ],       
-        
-        
+        ],
+
+
     ];
 
     /**

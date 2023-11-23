@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\admin\controllers;
+namespace siripravi\catalog\admin\controllers;
 
 /**
  * Set Controller.
@@ -12,5 +12,5 @@ class SetController extends \luya\admin\ngrest\base\Controller
     /**
      * @var string The path to the model which is the provider for the rules and fields.
      */
-    public $modelClass = 'app\modules\catalog\models\Set';
+    public $modelClass = 'siripravi\catalog\models\Set';
 }

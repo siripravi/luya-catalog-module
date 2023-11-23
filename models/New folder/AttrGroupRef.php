@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
@@ -59,8 +59,7 @@ class AttrGroupRef extends NgRestModel
      */
     public function ngRestAttributeTypes()
     {
-        return [
-        ];
+        return [];
     }
 
     /**

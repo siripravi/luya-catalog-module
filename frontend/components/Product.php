@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\catalog\frontend\components;
+namespace siripravi\catalog\frontend\components;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use app\modules\catalog\admin\behaviors\ManyToManyBehavior;
+use siripravi\catalog\admin\behaviors\ManyToManyBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -27,19 +27,19 @@ class Product extends ActiveRecord
 
     public function behaviors()
     {
-    return [
-                [
-                    'class' => TimestampBehavior::class,
-                    'createdAtAttribute' => 'created_at',
-                    'updatedAtAttribute' => 'updated_at',
-                    'value' => new Expression('NOW()'),
-                ],
-                [
-                    'class' => ManyToManyBehavior::class,
-                    'relations' => [
-                        'group_ids' => ['groups'],
-                    ]
-                ]      
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+            [
+                'class' => ManyToManyBehavior::class,
+                'relations' => [
+                    'group_ids' => ['groups'],
+                ]
+            ]
         ];
     }
     /**
@@ -50,19 +50,19 @@ class Product extends ActiveRecord
         return [
             [['slug'], 'required'],
             [['brand_id', 'created_at', 'updated_at', 'price_from', 'position', 'enabled'], 'integer'],
-            [['name','slug', 'view','text'], 'string', 'max' => 255],
-            [['adminGroups'], 'safe'],           
+            [['name', 'slug', 'view', 'text'], 'string', 'max' => 255],
+            [['adminGroups'], 'safe'],
             [['group_ids'], 'each', 'rule' => ['integer']]
         ];
-    }    
+    }
 
     public static function viewPage($id)
     {
         if (is_numeric($id)) {
-            $page = self::find()->where(['slug'=>$id])->one();
+            $page = self::find()->where(['slug' => $id])->one();
         } else {
-            $page = self::find()->where(['slug'=>$id])->one();
-          //echo $page->id; die;  //->createCommand()->getRawSql(); die;
+            $page = self::find()->where(['slug' => $id])->one();
+            //echo $page->id; die;  //->createCommand()->getRawSql(); die;
         }
         if ($page === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -83,4 +83,4 @@ class Product extends ActiveRecord
         }
         return $page;
     }
-}  
+}

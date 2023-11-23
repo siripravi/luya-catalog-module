@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\admin\controllers;
+namespace siripravi\catalog\admin\controllers;
 
 /**
  * Article Controller.
@@ -12,7 +12,7 @@ class ArticleController extends \luya\admin\ngrest\base\Controller
     /**
      * @var string The path to the model which is the provider for the rules and fields.
      */
-    public $modelClass = 'app\modules\catalog\models\Article';
+    public $modelClass = 'siripravi\catalog\models\Article';
 
     /**
      *
@@ -24,5 +24,4 @@ class ArticleController extends \luya\admin\ngrest\base\Controller
     {
         return $this->render('articlefeature');
     }
-   
 }

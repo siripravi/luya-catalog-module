@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\catalog\frontend\blocks;
+namespace siripravi\catalog\frontend\blocks;
 
-use app\modules\catalog\frontend\blockgroups\BlockCollectionGroup;
+use siripravi\catalog\frontend\blockgroups\BlockCollectionGroup;
 
 use luya\cms\base\PhpBlock;
 
@@ -14,17 +14,17 @@ use luya\cms\base\PhpBlock;
 class FeatureBlock extends PhpBlock
 {
     public $module = 'catalog';
-    
+
     /**
      * @var bool Choose whether a block can be cached trough the caching component. Be carefull with caching container blocks.
      */
     public $cacheEnabled = true;
-    
+
     /**
      * @var int The cache lifetime for this block in seconds (3600 = 1 hour), only affects when cacheEnabled is true
      */
     public $cacheExpiration = 3600;
-    
+
     /**
      * @inheritDoc
      */
@@ -32,7 +32,7 @@ class FeatureBlock extends PhpBlock
     {
         return BlockCollectionGroup::class;
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -40,7 +40,7 @@ class FeatureBlock extends PhpBlock
     {
         return 'Feature Block';
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -48,7 +48,7 @@ class FeatureBlock extends PhpBlock
     {
         return 'extension'; // see the list of icons on: https://design.google.com/icons/
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -67,9 +67,9 @@ class FeatureBlock extends PhpBlock
             ],
         ];
     }
-    
+
     private $_link;
-    
+
     /**
      * @return false|\luya\web\LinkInterface|\luya\cms\menu\Item
      */
@@ -78,10 +78,10 @@ class FeatureBlock extends PhpBlock
         if ($this->_link === null) {
             $this->_link = \luya\cms\helpers\BlockHelper::linkObject($this->getVarValue('url'));
         }
-        
+
         return $this->_link;
     }
-    
+
     /**
      * Get the text based on type input.
      */
@@ -90,10 +90,10 @@ class FeatureBlock extends PhpBlock
         if (!$this->getVarValue('title') && $this->getVarValue('url') && $this->getVarValue('url', 0)['type'] == 1) {
             return $this->getLink()->title;
         }
-        
+
         return $this->getVarValue('title');
     }
-    
+
     /**
      * Get the text based on type input.
      */
@@ -102,10 +102,10 @@ class FeatureBlock extends PhpBlock
         if (!$this->getVarValue('text') && $this->getVarValue('url') && $this->getVarValue('url', 0)['type'] == 1) {
             return $this->getLink()->description;
         }
-        
+
         return $this->getVarValue('text');
     }
-    
+
     /**
      * @return bool|\luya\admin\image\Item
      */
@@ -113,7 +113,7 @@ class FeatureBlock extends PhpBlock
     {
         return \Yii::$app->storage->getImage($this->getCfgValue('background-src'));
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -126,7 +126,7 @@ class FeatureBlock extends PhpBlock
             'backgroundImage' => $this->getBackgroundImage(),
         ];
     }
-    
+
     /**
      * {@inheritDoc}
      *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View file for block: FeatureBlock 
  *
@@ -13,6 +14,7 @@
  * @var string $linkName
  * @var string $iconClass
  */
+
 use yii\helpers\Html;
 
 $link = $this->extraValue('link');
@@ -23,7 +25,7 @@ $linkName = $this->varValue('linkName') ?: 'Mehr';
 
 ?>
 <section class="feature-list">
-    <h3 class="icon <?php echo "fa-$iconClass"?>">
+    <h3 class="icon <?php echo "fa-$iconClass" ?>">
         <?php echo Html::encode($title) ?>
     </h3>
     <p>

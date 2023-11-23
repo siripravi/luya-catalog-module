@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: dench
@@ -8,9 +9,9 @@
  * @var app\models\Product $model
  */
 
-use app\modules\catalog\frontend\widgets\ProductCard;
+use siripravi\catalog\frontend\widgets\ProductCard;
 
 echo ProductCard::widget([
     'model' => $model,
-    'link' => ['/product/'.$model->slug],
+    'link' => ['/product/' . $model->slug],
 ]);

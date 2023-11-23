@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\catalog\frontend\properties;
+namespace siripravi\catalog\frontend\properties;
 
-use app\modules\catalog\frontend\Module;
+use siripravi\catalog\frontend\Module;
 use luya\admin\base\Property;
 
 class SecondaryColorProperty extends Property
@@ -14,7 +14,7 @@ class SecondaryColorProperty extends Property
     {
         return 'secondaryColor';
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -22,7 +22,7 @@ class SecondaryColorProperty extends Property
     {
         return Module::t('Secondary Color');
     }
-    
+
     /**
      * @inheritDoc
      */

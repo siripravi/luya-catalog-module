@@ -1,10 +1,11 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use yii\helpers\ArrayHelper;
+
 /**
  * Value.
  * 
@@ -91,7 +92,7 @@ class Value extends NgRestModel
     {
         return $this->hasOne(Feature::class, ['id' => 'feature_id']);
     }
-    
+
 
     /**
      * @return \yii\db\ActiveQuery
@@ -108,11 +109,11 @@ class Value extends NgRestModel
     public static function getList($feature_id)
     {
         $values = self::find()->andFilterWhere(['feature_id' => $feature_id])->orderBy('position')->all();
-        
+
         return ArrayHelper::map($values, 'id', 'name');
     }
 
-    
+
 
     public static function getListEx($feature_id, $group_id)
     {

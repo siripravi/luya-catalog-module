@@ -13,7 +13,7 @@ use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = [
     'label' => Yii::t('app', 'Products'),
-    'url' => ['/menu/'.$page->slug],
+    'url' => ['/menu/' . $page->slug],
 ];
 
 if ($page->parent) {
@@ -37,30 +37,31 @@ $this->registerJs($js);
 
 
 <?php Pjax::begin(['id' => 'pjax']); ?>
-<div class="container"  style="margin-top:124px;">
-<?php if ($page->text) : ?><h2 class="text-center heading"><?= $page->text ?> </h2><?php endif; ?>
-   <?=
-     $this->render('_search', [
+<div class="container" style="margin-top:124px;">
+    <?php if ($page->text) : ?><h2 class="text-center heading"><?= $page->text ?> </h2><?php endif; ?>
+    <?=
+    $this->render('_search', [
         'model' => $searchModel,
         'page' => $page,
-        'features' => $features])
+        'features' => $features
+    ])
     ?>
-	
-            <?php
-            echo ListView::widget([
-                'dataProvider' => $dataProvider,
-                'itemView' => '_item',
-                'layout' => '<div class="row featured">{items}</div>',
-                'emptyTextOptions' => [
-                    'class' => 'alert alert-danger',
-                ],
-                'options' => ['class' => 'products home-products container'],
-                'itemOptions' => [
-                    'class' => 'col-sm-6 col',
-                ]
-            ]); 
-            ?>  
-    </div>
+
+    <?php
+    echo ListView::widget([
+        'dataProvider' => $dataProvider,
+        'itemView' => '_item',
+        'layout' => '<div class="row featured">{items}</div>',
+        'emptyTextOptions' => [
+            'class' => 'alert alert-danger',
+        ],
+        'options' => ['class' => 'products home-products container'],
+        'itemOptions' => [
+            'class' => 'col-sm-6 col',
+        ]
+    ]);
+    ?>
+</div>
 <?php Pjax::end(); ?>
 
 <!--php if (!Yii::$app->request->get('page') && $page->seo): ?>

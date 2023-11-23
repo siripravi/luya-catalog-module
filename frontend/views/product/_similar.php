@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: dench
@@ -9,7 +10,7 @@
  * @var $viewed boolean
  */
 
-use app\modules\catalog\frontend\widgets\ProductCard;
+use siripravi\catalog\frontend\widgets\ProductCard;
 
 ?>
 <!--
@@ -23,12 +24,12 @@ use app\modules\catalog\frontend\widgets\ProductCard;
     <div class="text-center mb-4">
         <h2 class="section-title px-5"><span class="px-2">You may also be interested in</span></h2>
     </div>
-	<div class="row">
+    <div class="row">
         <?php foreach ($similar as $product) : ?>
             <div class="col-md-6 col-lg-4">
                 <?= ProductCard::widget([
                     'model' => $product,
-                    'link' => ['/product/'. $product->slug],
+                    'link' => ['/product/' . $product->slug],
                 ]);
                 ?>
             </div>

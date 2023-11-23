@@ -1,9 +1,10 @@
 <?php
 
-namespace app\modules\catalog\frontend\blocks;
+namespace siripravi\catalog\frontend\blocks;
+
 use luya\cms\base\PhpBlock;
 
-use app\modules\catalog\frontend\blockgroups\BlockCollectionGroup;
+use siripravi\catalog\frontend\blockgroups\BlockCollectionGroup;
 
 /**
  * Carousel Block.
@@ -13,23 +14,23 @@ use app\modules\catalog\frontend\blockgroups\BlockCollectionGroup;
 class CarouselBlock extends PhpBlock
 {
     public $module = 'catalog';
-    
+
     /**
      * @var boolean Choose whether block is a layout/container/segmnet/section block or not, Container elements will be optically displayed
      * in a different way for a better user experience. Container block will not display isDirty colorizing.
      */
     public $isContainer = true;
-    
+
     /**
      * @var bool Choose whether a block can be cached trough the caching component. Be carefull with caching container blocks.
      */
     public $cacheEnabled = false;
-    
+
     /**
      * @var int The cache lifetime for this block in seconds (3600 = 1 hour), only affects when cacheEnabled is true
      */
     public $cacheExpiration = 3600;
-    
+
     /**
      * @inheritDoc
      */
@@ -37,7 +38,7 @@ class CarouselBlock extends PhpBlock
     {
         return BlockCollectionGroup::class;
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -45,7 +46,7 @@ class CarouselBlock extends PhpBlock
     {
         return 'Carousel Block';
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -53,7 +54,7 @@ class CarouselBlock extends PhpBlock
     {
         return 'extension'; // see the list of icons on: https://design.google.com/icons/
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -68,7 +69,7 @@ class CarouselBlock extends PhpBlock
             ],
         ];
     }
-    
+
     /**
      * {@inheritDoc}
      *

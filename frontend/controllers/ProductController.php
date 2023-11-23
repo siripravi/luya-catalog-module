@@ -1,11 +1,12 @@
 <?php
 
-namespace app\modules\catalog\frontend\controllers;
-use app\modules\catalog\frontend\components\BaseController;
+namespace siripravi\catalog\frontend\controllers;
+
+use siripravi\catalog\frontend\components\BaseController;
 //use app\models\Review;
 //use app\models\ReviewForm;
-use app\modules\catalog\models\Product;
-use app\modules\catalog\models\Feature;
+use siripravi\catalog\models\Product;
+use siripravi\catalog\models\Feature;
 //use app\traits\BlockTrait;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -14,13 +15,13 @@ use yii\web\NotFoundHttpException;
 
 class ProductController extends BaseController
 {
-   // use BlockTrait;
+    // use BlockTrait;
 
     public function actionIndex($slug)
     {    //echo $slug; die;
         $model = Product::viewPage($slug);
-       
-      /*  echo "<pre>";
+
+        /*  echo "<pre>";
         print_r($slug);
         die;  */
         if (!$model->enabled) {
@@ -32,7 +33,7 @@ class ProductController extends BaseController
         /**
          * Save viewed products
          */
-        $viewed_ids = Yii::$app->request->cookies->getValue('viewed_ids','a:0:{}');
+        $viewed_ids = Yii::$app->request->cookies->getValue('viewed_ids', 'a:0:{}');
         $viewed_ids = unserialize($viewed_ids);
         array_unshift($viewed_ids, $model->id);
         $viewed_ids = array_unique($viewed_ids);
@@ -40,7 +41,7 @@ class ProductController extends BaseController
         Yii::$app->response->cookies->add(new \yii\web\Cookie([
             'name' => 'viewed_ids',
             'value' => serialize($viewed_ids),
-            'expire' => time()+3600*24*30
+            'expire' => time() + 3600 * 24 * 30
         ]));
         $viewed_ids = array_diff($viewed_ids, [$model->id]);
         //$similar = Product::find()->where(['id' => $viewed_ids])->all();
@@ -50,8 +51,8 @@ class ProductController extends BaseController
          * Similar products
          */
         //if (count($similar) < 1) {
-            $viewed = 0;
-            $similar = Product::find()->joinWith(['groups'])->where(['catalog_product.enabled' => 1, 'group_id' => $model->group_ids[0]])->andWhere(['!=', 'catalog_product.id', $model->id])->limit(6)->all();
+        $viewed = 0;
+        $similar = Product::find()->joinWith(['groups'])->where(['catalog_product.enabled' => 1, 'group_id' => $model->group_ids[0]])->andWhere(['!=', 'catalog_product.id', $model->id])->limit(6)->all();
         //} else {
         //    $viewed = 1;
         //}
@@ -59,7 +60,7 @@ class ProductController extends BaseController
 
         $view = 'index';
 
-       /* if ($model->view) {
+        /* if ($model->view) {
             $view = $model->view;  //ie., 'accessory' || 'container'
         }*/
 
@@ -76,8 +77,8 @@ class ProductController extends BaseController
                 'content' => $model->text
             ], 'text');
         }
- 
-      /*  $reviewForm = new ReviewForm();
+
+        /*  $reviewForm = new ReviewForm();
         $reviewForm->product_id = $model->id;
 
         if ($reviewForm->load(Yii::$app->request->post()) && $reviewForm->send()) {
@@ -94,7 +95,7 @@ class ProductController extends BaseController
             ],
         ]);*/
 
-      /*  $rating = Review::find()
+        /*  $rating = Review::find()
             ->select(['SUM(rating) sum', 'COUNT(*) count'])
             ->where(['status' => Review::STATUS_PUBLISHED, 'product_id' => $model->id])
             ->asArray()
@@ -109,16 +110,15 @@ class ProductController extends BaseController
             ];
         }*/
         $features = Feature::getObjectList(true, $model->group_ids);
-       // $features = Feature::getFilterList(true, [$searchModel->category_id]);
+        // $features = Feature::getFilterList(true, [$searchModel->category_id]);
         return $this->render('container', [
             'model' => $model,
             'viewed' => $viewed,
-            'similar' => $similar,                    
+            'similar' => $similar,
             'features' => $features,
-          //  'reviewForm' => $reviewForm,
-           // 'dataProvider' => $dataProvider,
-          //  'rating' => $rating,
+            //  'reviewForm' => $reviewForm,
+            // 'dataProvider' => $dataProvider,
+            //  'rating' => $rating,
         ]);
     }
-
 }

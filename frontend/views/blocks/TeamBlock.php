@@ -1,12 +1,12 @@
 <!-- Team Start -->
 <div class="container-xxl py-6">
-        <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <p class="text-primary text-uppercase mb-2">// Our Team</p>
-                <h1 class="display-6 mb-4">We're Super Professional At Our Skills</h1>
-            </div>
-            <div class="row g-4">
-                <?php foreach($this->extraValue("images") as $image): ?> 
+    <div class="container">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <p class="text-primary text-uppercase mb-2">// Our Team</p>
+            <h1 class="display-6 mb-4">We're Super Professional At Our Skills</h1>
+        </div>
+        <div class="row g-4">
+            <?php foreach ($this->extraValue("images") as $image) : ?>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item text-center rounded overflow-hidden">
                         <img class="img-fluid" src="img/team-1.jpg" alt="">
@@ -23,9 +23,9 @@
                         </div>
                     </div>
                 </div>
-               
-               <?php endforeach; ?>
-               
+
+            <?php endforeach; ?>
+
         </div>
     </div>
     <!-- Team End -->

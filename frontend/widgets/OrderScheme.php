@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: dench
@@ -6,23 +7,23 @@
  * Time: 17:54
  */
 
-namespace app\modules\catalog\frontend\widgets;
+namespace siripravi\catalog\frontend\widgets;
 
 use yii\base\Widget;
 
 class OrderScheme extends Widget
 {
     public $baseUrl =  __DIR__ . "/";
-   
-	public function init()
+
+    public function init()
     {
         // Tell AssetBundle where the assets files are
-       // $this->sourcePath = __DIR__ . "/";
+        // $this->sourcePath = __DIR__ . "/";
         parent::init();
     }
     public function run()
     {
-		
+
         return $this->render('orderScheme', ['baseUrl' => $this->baseUrl]);
     }
 }

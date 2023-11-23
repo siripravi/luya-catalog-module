@@ -1,10 +1,11 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use yii\helpers\ArrayHelper;
+
 /**
  * Article Value Ref.
  * 
@@ -15,7 +16,7 @@ use yii\helpers\ArrayHelper;
  */
 class ArticleValueRef extends NgRestModel
 {
-     /**
+    /**
      * @inheritdoc
      */
     public static function ngRestApiEndpoint()
@@ -30,7 +31,7 @@ class ArticleValueRef extends NgRestModel
         return 'catalog_article_value_ref';
     }
 
-   
+
     /**
      * @inheritdoc
      */
@@ -69,12 +70,9 @@ class ArticleValueRef extends NgRestModel
     public static function getList($article_id)
     {
         $values = self::find()->where(['article_id' => $article_id])->all();
-        
-        return ArrayHelper::getColumn($values,function ($element) {
-            return strval($element['value_id']);
-       });
-           
-    }
 
-     
+        return ArrayHelper::getColumn($values, function ($element) {
+            return strval($element['value_id']);
+        });
+    }
 }

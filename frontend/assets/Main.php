@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\frontend\assets;
+namespace siripravi\catalog\frontend\assets;
 
 
 class Main extends \luya\web\Asset

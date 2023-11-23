@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
@@ -92,7 +92,7 @@ class Attr extends NgRestModel
      */
     public function getGRoups()
     {
-		
+
         return $this->hasMany(Group::class, ['id' => 'group_id'])->viaTable('catalog_attr_group_ref', ['attr_id' => 'id']);
     }
 
@@ -122,14 +122,14 @@ class Attr extends NgRestModel
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> [
+            'sort' => [
                 'defaultOrder' => [
                     'position' => SORT_ASC,
                 ],
             ],
         ]);
 
-     /*   if ($this->all) {
+        /*   if ($this->all) {
             $dataProvider->pagination = false;
         }*/
 
@@ -139,7 +139,7 @@ class Attr extends NgRestModel
             $query->joinWith(['groups']);
         }
 
-       /* if ($this->name) {
+        /* if ($this->name) {
             $query->joinWith(['translations']);
         }*/
 

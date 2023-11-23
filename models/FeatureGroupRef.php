@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
@@ -64,7 +64,7 @@ class FeatureGroupRef extends NgRestModel
         ];
     }
 
-    
+
     /**
      * @inheritdoc
      */

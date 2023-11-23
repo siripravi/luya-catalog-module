@@ -1,6 +1,7 @@
 <?php
 
-namespace app\modules\catalog\admin\apis;
+namespace siripravi\catalog\admin\apis;
+
 use yii\helpers\Json;
 
 /**
@@ -13,7 +14,7 @@ class ArticleController extends \luya\admin\ngrest\base\Api
     /**
      * @var string The path to the model which is the provider for the rules and fields.
      */
-    public $modelClass = 'app\modules\catalog\models\Article';
+    public $modelClass = 'siripravi\catalog\models\Article';
 
     /**
      *
@@ -23,36 +24,35 @@ class ArticleController extends \luya\admin\ngrest\base\Api
     public function actionFeatures($id)
     {
         $model = $this->findModel($id);
-        
+
         $data = [];
-        
+
         foreach ($model->getFeatures()->all() as $set) {
             $data[] = [
                 'set' => $set,
-                'attributes' =>[],// $set->values,  
+                'attributes' => [], // $set->values,  
             ];
         }
-       //echo "<pre>"; print_r($data);die;
+        //echo "<pre>"; print_r($data);die;
         return $data;
     }
 
-    public function formatData($valData){
+    public function formatData($valData)
+    {
         $data = [];
         foreach ($valData as $value) {
             $data[$value->feature_id][$value->id] = $value;
         }
 
 
-        foreach($valData as $i=>$data){
+        foreach ($valData as $i => $data) {
             $values = [];
-            foreach($data as $j=> $val){
+            foreach ($data as $j => $val) {
                 $values[] = $data[$j]->name;
-            }  
+            }
             $valData["values_json"] = Json::encode($values);
         }
-        
+
         return $valData;
     }
-
-   
 }

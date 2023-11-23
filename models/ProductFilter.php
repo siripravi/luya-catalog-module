@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -9,7 +9,7 @@ use yii\db\Query;
 /**
  * ProductFilter represents the model behind the search form about `admin\products\models\Product`.
  */
-class ProductFilter extends \app\modules\catalog\frontend\components\Product
+class ProductFilter extends \siripravi\catalog\frontend\components\Product
 {
     public $category_id;
 
@@ -25,7 +25,7 @@ class ProductFilter extends \app\modules\catalog\frontend\components\Product
         return [
             [['feature_ids'], 'each', 'rule' => ['each', 'rule' => ['integer']]],
             [['product_ids'], 'each', 'rule' => ['integer']],
-            [['name','category_id'], 'safe'],
+            [['name', 'category_id'], 'safe'],
 
         ];
     }
@@ -34,11 +34,11 @@ class ProductFilter extends \app\modules\catalog\frontend\components\Product
      * @inheritdoc
      */
     public function scenarios()
-    {        
+    {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
-   
+
     /**
      * Creates data provider instance with search query applied
      *
@@ -70,7 +70,7 @@ class ProductFilter extends \app\modules\catalog\frontend\components\Product
                 $this->product_ids = [0];
 
                 if (count($variant_ids) > 1) {
-                    $variant_ids = call_user_func_array('array_intersect',$variant_ids);
+                    $variant_ids = call_user_func_array('array_intersect', $variant_ids);
                 } else {
                     $variant_ids = current($variant_ids);
                 }
@@ -85,8 +85,8 @@ class ProductFilter extends \app\modules\catalog\frontend\components\Product
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
-        }        
-        
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'catalog_product.id' => $this->product_ids,
@@ -98,7 +98,7 @@ class ProductFilter extends \app\modules\catalog\frontend\components\Product
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> [
+            'sort' => [
                 'defaultOrder' => [
                     'position' => SORT_DESC,
                 ],
@@ -108,10 +108,9 @@ class ProductFilter extends \app\modules\catalog\frontend\components\Product
         return $dataProvider;
     }
 
-    
+
     public function getGroups()
     {
         return $this->hasMany(Group::class, ['id' => 'group_id'])->viaTable(ProductGroupRef::tableName(), ['product_id' => 'id']);
     }
-
 }

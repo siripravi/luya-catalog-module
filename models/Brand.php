@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
@@ -78,8 +78,8 @@ class Brand extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['image_id', 'name','position', 'enabled']],
-            [['create', 'update'], ['name','image_id', 'position', 'enabled']],
+            ['list', ['image_id', 'name', 'position', 'enabled']],
+            [['create', 'update'], ['name', 'image_id', 'position', 'enabled']],
             ['delete', false],
         ];
     }

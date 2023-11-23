@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\catalog\frontend\blocks;
+namespace siripravi\catalog\frontend\blocks;
 
 use luya\cms\base\PhpBlock;
-use app\modules\catalog\frontend\blockgroups\BlockCollectionGroup;
+use siripravi\catalog\frontend\blockgroups\BlockCollectionGroup;
 use luya\TagParser;
 
 
@@ -15,17 +15,17 @@ use luya\TagParser;
 class PostBlock extends PhpBlock
 {
     public $module = 'catalog';
-    
+
     /**
      * @var bool Choose whether a block can be cached trough the caching component. Be carefull with caching container blocks.
      */
     public $cacheEnabled = true;
-    
+
     /**
      * @var int The cache lifetime for this block in seconds (3600 = 1 hour), only affects when cacheEnabled is true
      */
     public $cacheExpiration = 3600;
-    
+
     /**
      * @inheritDoc
      */
@@ -33,7 +33,7 @@ class PostBlock extends PhpBlock
     {
         return BlockCollectionGroup::class;
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -41,7 +41,7 @@ class PostBlock extends PhpBlock
     {
         return 'Post Block';
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -49,7 +49,7 @@ class PostBlock extends PhpBlock
     {
         return 'extension'; // see the list of icons on: https://design.google.com/icons/
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -81,9 +81,9 @@ class PostBlock extends PhpBlock
             ],
         ];
     }
-    
+
     private $_url;
-    
+
     /**
      * @return false|\luya\web\LinkInterface|\luya\cms\menu\Item
      */
@@ -92,10 +92,10 @@ class PostBlock extends PhpBlock
         if ($this->_url === null) {
             $this->_url = \luya\cms\helpers\BlockHelper::linkObject($this->getVarValue('url'));
         }
-        
+
         return $this->_url;
     }
-    
+
     /**
      * Get the text based on type input.
      */
@@ -107,10 +107,10 @@ class PostBlock extends PhpBlock
         if (!$text && ($urlValType == 1)) {
             return $this->getUrl()->title;
         }
-        
+
         return $this->getVarValue('title');
     }
-    
+
     /**
      * Get the text based on type input.
      */
@@ -122,21 +122,21 @@ class PostBlock extends PhpBlock
         if (!$text && ($urlValType == 1)) {
             $text = $this->getUrl()->description;
         }
-        
+
         return TagParser::convertWithMarkdown($text);
     }
-    
+
     private $_image = null;
-    
+
     public function getImage()
     {
         if ($this->_image === null) {
             $this->_image = \Yii::$app->storage->getImage($this->getVarValue('image'));
         }
-        
+
         return $this->_image;
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -149,7 +149,7 @@ class PostBlock extends PhpBlock
             'image' => $this->getImage(),
         ];
     }
-    
+
     /**
      * {@inheritDoc}
      *

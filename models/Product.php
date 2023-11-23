@@ -1,13 +1,13 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
 use yii\behaviors\TimestampBehavior;
-use app\modules\catalog\admin\behaviors\ManyToManyBehavior;
+use siripravi\catalog\admin\behaviors\ManyToManyBehavior;
 use yii\db\Expression;
 
 /**
@@ -53,20 +53,20 @@ class Product extends NgRestModel
 
     public function behaviors()
     {
-    return [
-                [
-                    'class' => TimestampBehavior::class,
-                    'createdAtAttribute' => 'created_at',
-                    'updatedAtAttribute' => 'updated_at',
-                    'value' => new Expression('NOW()'),
-                ],
-                [
-                    'class' => ManyToManyBehavior::class,
-                    'relations' => [
-                        'group_ids' => ['groups'],
-                        'related_ids' => ['related'],
-                    ]
-                ]      
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+            [
+                'class' => ManyToManyBehavior::class,
+                'relations' => [
+                    'group_ids' => ['groups'],
+                    'related_ids' => ['related'],
+                ]
+            ]
         ];
     }
     /**
@@ -80,10 +80,10 @@ class Product extends NgRestModel
     public function ngRestRelations()
     {
         //$query = Article::find()->where(['product_id'=>1]);
-       // echo "<pre>"; print_r( $query); die;//->createCommand()->getRawSql(); die;
+        // echo "<pre>"; print_r( $query); die;//->createCommand()->getRawSql(); die;
         return [
-            ['label' => 'Articles', 'targetModel' => Article::class,'apiEndpoint' => Article::ngRestApiEndpoint(), 'dataProvider' => $this->getArticles()],
-           // ['label' => 'Related', 'targetModel' => ProductRelated::class,'apiEndpoint' => ProductRelated::ngRestApiEndpoint(), 'dataProvider' => $this->getRelated()],
+            ['label' => 'Articles', 'targetModel' => Article::class, 'apiEndpoint' => Article::ngRestApiEndpoint(), 'dataProvider' => $this->getArticles()],
+            // ['label' => 'Related', 'targetModel' => ProductRelated::class,'apiEndpoint' => ProductRelated::ngRestApiEndpoint(), 'dataProvider' => $this->getRelated()],
         ];
     }
 
@@ -118,13 +118,13 @@ class Product extends NgRestModel
     {
         return [
             [['slug'], 'required'],
-            [['brand_id', 'created_at', 'updated_at', 'price_from','cover_image_id', 'position', 'enabled'], 'integer'],
-            [['name','slug', 'view','text'], 'string', 'max' => 255],
-            [['adminGroups'], 'safe'], 
-            [['adminRelated'], 'safe'],          
+            [['brand_id', 'created_at', 'updated_at', 'price_from', 'cover_image_id', 'position', 'enabled'], 'integer'],
+            [['name', 'slug', 'view', 'text'], 'string', 'max' => 255],
+            [['adminGroups'], 'safe'],
+            [['adminRelated'], 'safe'],
             [['group_ids'], 'each', 'rule' => ['integer']],
             [['related_ids'], 'each', 'rule' => ['integer']]
-            
+
         ];
     }
 
@@ -155,8 +155,8 @@ class Product extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name','cover_image_id', 'brand_id', 'created_at', 'updated_at', 'price_from', 'view', 'position', 'enabled']],
-            [['create', 'update'], ['name','slug','cover_image_id', 'adminGroups','adminRelated', 'brand_id', 'price_from', 'view', 'position', 'enabled']],
+            ['list', ['name', 'cover_image_id', 'brand_id', 'created_at', 'updated_at', 'price_from', 'view', 'position', 'enabled']],
+            [['create', 'update'], ['name', 'slug', 'cover_image_id', 'adminGroups', 'adminRelated', 'brand_id', 'price_from', 'view', 'position', 'enabled']],
             ['delete', false],
         ];
     }
@@ -184,21 +184,21 @@ class Product extends NgRestModel
 
     public function extraFields()
     {
-        return ['adminGroups','adminRelated'];  //adminSets
+        return ['adminGroups', 'adminRelated'];  //adminSets
     }
 
     public function getArticles()
     {
         return $this->hasMany(Article::class, ['product_id' => 'id']);
     }
-    
+
 
     public function getGroups()
     {
         return $this->hasMany(Group::class, ['id' => 'group_id'])->viaTable(ProductGroupRef::tableName(), ['product_id' => 'id']);
     }
 
-    
+
     /**
      * @return Article
      */
@@ -211,21 +211,22 @@ class Product extends NgRestModel
     {
         return $this->hasMany(Related::class, ['id' => 'related_id'])->viaTable('catalog_product_related_ref', ['product_id' => 'id']);
     }
-     
-     /**
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getOptions()
     {
         return $this->hasMany(Product::class, ['id' => 'set_id'])->viaTable('catalog_product_set_ref', ['product_id' => 'id']);
     }
-    
-   /* public function getSets()
+
+    /* public function getSets()
     {
         return $this->hasMany(Set::class, ['id' => 'set_id'])->viaTable(ProductSetRef::tableName(), ['product_id' => 'id']);
     }*/
 
-    public function getFeatures(){
+    public function getFeatures()
+    {
         if (!empty($this->group_ids)) {
             $features = Feature::getObjectList(true, $model->group_ids);
         } else {
@@ -236,10 +237,10 @@ class Product extends NgRestModel
     public static function viewPage($id)
     {
         if (is_numeric($id)) {
-            $page = self::find()->where(['id'=>$id])->one();
+            $page = self::find()->where(['id' => $id])->one();
         } else {
-            $page = self::find()->where(['slug'=>$id])->one();
-          //echo $page->id; die;  //->createCommand()->getRawSql(); die;
+            $page = self::find()->where(['slug' => $id])->one();
+            //echo $page->id; die;  //->createCommand()->getRawSql(); die;
         }
         if ($page === null) {
             throw new NotFoundHttpException('The requested page does not exist.');

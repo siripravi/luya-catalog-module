@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: dench
@@ -21,7 +22,7 @@
  * ```
  */
 
-namespace app\modules\catalog\frontend\widgets;
+namespace siripravi\catalog\frontend\widgets;
 
 use app\resources\PhotoswipeAsset;
 use yii\base\Widget;

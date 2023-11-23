@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: dench
@@ -6,9 +7,9 @@
  * Time: 13:01
  */
 
-namespace app\modules\catalog\frontend\widgets;
+namespace siripravi\catalog\frontend\widgets;
 
-use app\modules\catalog\models\Article;
+use siripravi\catalog\models\Article;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
@@ -37,32 +38,35 @@ class PriceTable extends Widget
     public function run()
     {
         /** @var $articles Variant[] */
-        $variant = "";$value_ids = []; $list = []; $feature_id = null; $feature_name = "";
+        $variant = "";
+        $value_ids = [];
+        $list = [];
+        $feature_id = null;
+        $feature_name = "";
         if ($this->article->enabled) {
             $variant = $this->article;
             $value_ids = $this->value_ids;
             $list = $this->list;
             $feature_id = $this->feature_id;
             $feature_name = $this->feature_name;
-        }      
-        foreach($value_ids as $vid){
-
+        }
+        foreach ($value_ids as $vid) {
         }
         $this->registerClientScript();
- 
-       
+
+
         $priceList = $variant->getPricesDef($feature_id);
-           echo "<div class='row'><div class='col-md-12'>";
-           echo "<label>".$feature_name."</label>"; 
-           echo "<div class='styled-select decoration'>";           
-              echo Html::dropDownList(
-                        'buy[' . $variant->product_id . '][2]', 
-                        "",
-                        ArrayHelper::map($priceList,"price","priceLabel")
-                        //['value' => $variant->id]) . ' ' . $variant->name, ['class' => $availableClass
-                    
-                    );
-            echo "</div></div></div>";       
+        echo "<div class='row'><div class='col-md-12'>";
+        echo "<label>" . $feature_name . "</label>";
+        echo "<div class='styled-select decoration'>";
+        echo Html::dropDownList(
+            'buy[' . $variant->product_id . '][2]',
+            "",
+            ArrayHelper::map($priceList, "price", "priceLabel")
+            //['value' => $variant->id]) . ' ' . $variant->name, ['class' => $availableClass
+
+        );
+        echo "</div></div></div>";
     }
 
     private function registerClientScript()

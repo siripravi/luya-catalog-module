@@ -11,17 +11,17 @@ class CurrencyInputPlugin extends Plugin
     {
         $this->createListTag($ngModel);
     }
-    
+
     public function renderUpdate($id, $ngModel)
     {
         return Angular::directive('currency-input', ['model' => $ngModel, 'data' => $this->getServiceName('data')]);
     }
-    
+
     public function renderCreate($id, $ngModel)
     {
         return Angular::directive('currency-input', ['model' => $ngModel, 'data' => $this->getServiceName('data')]);
     }
-    
+
     public function serviceData($event)
     {
         return [

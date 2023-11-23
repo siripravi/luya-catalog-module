@@ -14,7 +14,7 @@
             <h1 class="display-6 mb-4">Explore The Categories Of Our Bakery Products</h1>
         </div>
         <div class="row g-4">
-            <?php foreach($this->extraValue('elements')['categories'] as $key=>$element): ?>                    
+            <?php foreach ($this->extraValue('elements')['categories'] as $key => $element) : ?>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
                     <div class="product-item d-flex flex-column bg-white rounded overflow-hidden h-100">
                         <div class="text-center p-4">
@@ -31,18 +31,18 @@
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>                          
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
 
 <!--prodCard wrkg -->$_COOKIE<div class="card mb-4 product border-1 pb-3">
     <?php if ($model->cover_image_id) { ?>
-                <img src="<?= Yii::$app->storage->getImage($model->cover_image_id)->source; ?>" alt="<?= $model->name ?>" title="<?= $model->name ?>" class="card-img-top">
-        <?php } else { ?>
-                <img class="card-img-top" src="<?= Yii::$app->params['image']['none'] ?>" alt="">
+        <img src="<?= Yii::$app->storage->getImage($model->cover_image_id)->source; ?>" alt="<?= $model->name ?>" title="<?= $model->name ?>" class="card-img-top">
+    <?php } else { ?>
+        <img class="card-img-top" src="<?= Yii::$app->params['image']['none'] ?>" alt="">
     <?php } ?>
-    <span class="badge bg-success position-absolute text-white mt-2 ms-2"><a href="/" class="text-white"><?=$model->groups[0]->name;?></a></span>
+    <span class="badge bg-success position-absolute text-white mt-2 ms-2"><a href="/" class="text-white"><?= $model->groups[0]->name; ?></a></span>
     <!--
     <php if($model->statuses):?>
     <span class="badge  text-white position-absolute r-0 mt-2 me-2" style="background-color:<=$model->statuses[0]->color;?>;">       
@@ -51,9 +51,9 @@
     <php endif; ?>
     -->
     <span class="rounded position-absolute p-2 bg-warning text-white ms-2 small mt-5"></span>
-    <div class="card-body overflow-hidden position-relative p-0">        
-        <h6 class="card-subtitle mb-2"><a class="text-decoration-none" href="/product/detail"><?= $model->name;?></a></h6>
-        <div class="my-2"><span class="fw-bold h5"><?php echo $model->articles[0]->price;?></span>
+    <div class="card-body overflow-hidden position-relative p-0">
+        <h6 class="card-subtitle mb-2"><a class="text-decoration-none" href="/product/detail"><?= $model->name; ?></a></h6>
+        <div class="my-2"><span class="fw-bold h5"><?php echo $model->articles[0]->price; ?></span>
             <!--<del class="small text-muted ms-2">$2000</del>  -->
             <span class="ms-2">
                 <!--php
@@ -64,15 +64,15 @@
                 if ($floor < $rating['value']) {
                         echo '<span><i class="fa fa-star-half text-warning"></i></span> ';
                 }
-                ?-->     
+                ?-->
             </span>
         </div>
         <div class="btn-group  d-flex" role="group">
             <button type="button" class="btn btn-sm btn-primary" title="Add to cart">
-            <img src="/image/site/cart.svg">
+                <img src="/image/site/cart.svg">
             </button>
             <a type="button" href="<?= $link; ?>" class="btn btn-sm btn-outline-warning" title="View Detail">
-            <img src="/image/site/eye.svg">
+                <img src="/image/site/eye.svg">
             </a>
         </div>
     </div>

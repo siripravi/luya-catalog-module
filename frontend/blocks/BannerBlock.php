@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\catalog\frontend\blocks;
+namespace siripravi\catalog\frontend\blocks;
 
 use luya\cms\base\PhpBlock;
-use app\modules\catalog\frontend\blockgroups\BlockCollectionGroup;
+use siripravi\catalog\frontend\blockgroups\BlockCollectionGroup;
 
 /**
  * Banner Block.
@@ -13,17 +13,17 @@ use app\modules\catalog\frontend\blockgroups\BlockCollectionGroup;
 class BannerBlock extends PhpBlock
 {
     public $module = 'catalog';
-    
+
     /**
      * @var bool Choose whether a block can be cached trough the caching component. Be carefull with caching container blocks.
      */
     public $cacheEnabled = true;
-    
+
     /**
      * @var int The cache lifetime for this block in seconds (3600 = 1 hour), only affects when cacheEnabled is true
      */
     public $cacheExpiration = 3600;
-    
+
     /**
      * @inheritDoc
      */
@@ -31,7 +31,7 @@ class BannerBlock extends PhpBlock
     {
         return BlockCollectionGroup::class;
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -39,7 +39,7 @@ class BannerBlock extends PhpBlock
     {
         return 'Banner Block';
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -47,7 +47,7 @@ class BannerBlock extends PhpBlock
     {
         return 'extension'; // see the list of icons on: https://design.google.com/icons/
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -90,9 +90,9 @@ class BannerBlock extends PhpBlock
             ],
         ];
     }
-    
+
     private $_link;
-    
+
     /**
      * @return false|\luya\web\LinkInterface|\luya\cms\menu\Item
      */
@@ -101,20 +101,20 @@ class BannerBlock extends PhpBlock
         if ($this->_link === null) {
             $this->_link = \luya\cms\helpers\BlockHelper::linkObject($this->getVarValue('url'));
         }
-        
+
         return $this->_link;
     }
-    
+
     public function getImage()
     {
         return \Yii::$app->storage->getImage($this->getVarValue('image'));
     }
-    
+
     public function getBackground()
     {
         return $this->getCfgValue('background');
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -126,7 +126,7 @@ class BannerBlock extends PhpBlock
             'background' => $this->getBackground(),
         ];
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -154,7 +154,7 @@ class BannerBlock extends PhpBlock
 			{% endif %}
 			
 			</p>';
-        
+
         return '<p>Banner Block Admin View</p>';
     }
 }

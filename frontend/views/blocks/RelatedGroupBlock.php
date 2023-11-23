@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View file for block: HeadTeaserBlock 
  *
@@ -8,11 +9,11 @@
  * @var $this \luya\cms\base\PhpBlockView
  */
 
- use yii\widgets\ListView;
+use yii\widgets\ListView;
 ?>
 
 <?php
-    if($this->extraValue('elements')['dataProvider']){
+if ($this->extraValue('elements')['dataProvider']) {
     echo ListView::widget([
         'dataProvider' => $this->extraValue('elements')['dataProvider'],
         'itemView' => '@catalog/views/blocks/_item',
@@ -25,5 +26,5 @@
             'class' => 'col-sm-6 col',
         ]
     ]);
-}		
-    ?>
+}
+?>

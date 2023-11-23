@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: dench
@@ -35,13 +36,13 @@ if (@$model->articles[0]->price) {
 ?>
 
 <div class="img-wrapper">
-    <a data-productid="<?= $model->id;?>" href='<?="/product/".$model->slug; ?>'>
-        <?php echo Html::img(Yii::$app->storage->getImage($model->cover_image_id)->source,
-              ["width"=> 292, "height" => 204]) ?>  
+    <a data-productid="<?= $model->id; ?>" href='<?= "/product/" . $model->slug; ?>'>
+        <?php echo Html::img(
+            Yii::$app->storage->getImage($model->cover_image_id)->source,
+            ["width" => 292, "height" => 204]
+        ) ?>
     </a>
-    <span class="price"><?php echo $price;?><br><span class="per">/ea</span></span>
-</div>           
+    <span class="price"><?php echo $price; ?><br><span class="per">/ea</span></span>
+</div>
 <span class="info"><?= $model->groups[0]->name; ?></span>
 <p class="name"><a href="#"><?= $model->name; ?></a></p>
-
-    

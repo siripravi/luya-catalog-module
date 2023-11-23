@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: dench
@@ -8,13 +9,13 @@
  * @var $model dench\products\models\Product
  */
 
-use app\modules\catalog\frontend\widgets\GalleryWidget;
+use siripravi\catalog\frontend\widgets\GalleryWidget;
 
 ?>
 <div class="product-photo mb-3">
     <div class="photo">
         <?php if ($model->cover_image_id) { ?>
-            <a class="gallery-item" href="<?=  Yii::$app->storage->getImage($model->cover_image_id)->source ?>" data-size="500X400">
+            <a class="gallery-item" href="<?= Yii::$app->storage->getImage($model->cover_image_id)->source ?>" data-size="500X400">
                 <img class="img-fluid" src="<?= Yii::$app->storage->getImage($model->cover_image_id)->source; ?>" alt="<?= $model->name ?>" title="<?= $model->name ?>">
             </a>
         <?php } else { ?>
@@ -37,7 +38,7 @@ foreach ($images as $photo) {
         'image' => $photo->image->source,
         'thumb' => $photo->image->applyFilter('medium-thumbnail')->source,
         'width' => 800,
-        'height' => 800 ,
+        'height' => 800,
         'title' => $photo->image->caption,
     ];
 }

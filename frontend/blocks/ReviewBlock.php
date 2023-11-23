@@ -1,13 +1,14 @@
 <?php
 
-namespace app\modules\catalog\frontend\blocks;
+namespace siripravi\catalog\frontend\blocks;
 
 
 use luya\cms\base\PhpBlock;
 use luya\cms\frontend\blockgroups\ProjectGroup;
 use luya\cms\helpers\BlockHelper;
-use app\modules\catalog\models\Brand;
+use siripravi\catalog\models\Brand;
 use luya\cms\injectors\ActiveQueryCheckboxInjector;
+
 /**
  * Portfolio Block.
  *
@@ -15,7 +16,7 @@ use luya\cms\injectors\ActiveQueryCheckboxInjector;
  */
 class ReviewBlock extends PhpBlock
 {
-   // public $isContainer = true;
+    // public $isContainer = true;
 
     /**
      * @var string The module where this block belongs to in order to find the view files.
@@ -26,7 +27,7 @@ class ReviewBlock extends PhpBlock
      * @var bool Choose whether a block can be cached trough the caching component. Be carefull with caching container blocks.
      */
     public $cacheEnabled = true;
-    
+
     /**
      * @var int The cache lifetime for this block in seconds (3600 = 1 hour), only affects when cacheEnabled is true
      */
@@ -47,7 +48,7 @@ class ReviewBlock extends PhpBlock
     {
         return 'Review';
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -55,7 +56,7 @@ class ReviewBlock extends PhpBlock
     {
         return 'image'; // see the list of icons on: https://design.google.com/icons/
     }
- 
+
     /**
      * @inheritDoc
      */
@@ -64,8 +65,8 @@ class ReviewBlock extends PhpBlock
         return [
             'cfgs' => [
                 ['var' => 'images', 'label' => 'Images', 'type' => self::TYPE_IMAGEUPLOAD_ARRAY, 'options' => ['no_filter' => false]],
-                ['var' => 'client_name','label' => 'Client Name', 'type' =>self::TYPE_TEXT],
-                ['var' => 'profession','label' => 'Profession', 'type' =>self::TYPE_TEXT],
+                ['var' => 'client_name', 'label' => 'Client Name', 'type' => self::TYPE_TEXT],
+                ['var' => 'profession', 'label' => 'Profession', 'type' => self::TYPE_TEXT],
                 ['var' => 'review', 'label' => 'The Text', 'type' => self::TYPE_TEXTAREA],
                 ['var' => 'sel', 'label' => 'Selected', 'type' => self::TYPE_TEXT],
             ],
@@ -78,7 +79,7 @@ class ReviewBlock extends PhpBlock
         ];
     }
 
-     /**
+    /**
      * @inheritDoc
      */
     public function extraVars()
@@ -94,30 +95,31 @@ class ReviewBlock extends PhpBlock
      * {@inheritDoc} 
      *
      * @param {{vars.elements}}
-    */
+     */
     public function admin()
     {
         return '<h5 class="mb-3">Reviews</h5>' .
             '<table class="table table-bordered">' .
             '{% if cfgs.images is not empty %}' .
             '<tr><td><b>Clients</b></td><td>{{cfgs.images}}</td></tr>' .
-            '{% endif %}'.
+            '{% endif %}' .
             '</table>';
     }
 
-     /**
+    /**
      * {@inheritdoc}
      */
-   /* public function getViewPath()
+    /* public function getViewPath()
     {
         return  dirname(__DIR__).'/src/views/blocks';
     }  */
 
-    public function injectors(){
-        
+    public function injectors()
+    {
+
         return [
             'foobar' => new ActiveQueryCheckboxInjector([
-                'query' => Brand::find(),//->where(['id' => 1]),
+                'query' => Brand::find(), //->where(['id' => 1]),
                 'type' => self::INJECTOR_VAR, // could be self::INJECTOR_CFG,
                 'varName' => 'sel',
                 'varLabel' => 'The Field Label',
@@ -125,4 +127,3 @@ class ReviewBlock extends PhpBlock
         ];
     }
 }
-

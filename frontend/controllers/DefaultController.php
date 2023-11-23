@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\catalog\frontend\controllers;
+namespace siripravi\catalog\frontend\controllers;
 
-use app\modules\catalog\models\Group;
-use app\modules\catalog\models\Article;
+use siripravi\catalog\models\Group;
+use siripravi\catalog\models\Article;
 use Yii;
 use yii\web\View;
 use yii\web\NotFoundHttpException;
@@ -42,11 +42,11 @@ class DefaultController extends Controller
      * Returns all basket items for this user.
      */
     public function actionBasket()
-    {   
+    {
         // add your basket action logic
-        return $this->renderLayout('basket',['morning' => 'MORNING']);
+        return $this->renderLayout('basket', ['morning' => 'MORNING']);
     }
-    
+
     /**
      * Display confirmation page.
      */

@@ -12,13 +12,13 @@ echo $this->render('_breadcrumbs', [
 ?>
 
 <div class="row product-detail">
-   
-       <?= $this->render('_photo', [
-            'model' => $model,
-        ]) ?>
-    
+
+    <?= $this->render('_photo', [
+        'model' => $model,
+    ]) ?>
+
     <div class="col-md-12 col-lg-5 mx-auto single-details">
-	      <h1 class="mb-3"><?= $model->h1 ?></h1>
+        <h1 class="mb-3"><?= $model->h1 ?></h1>
         <?= $this->render('_feature', [
             'model' => $model,
         ]) ?>
@@ -27,11 +27,11 @@ echo $this->render('_breadcrumbs', [
             'name' => $model->name,
             'text' => $model->text,
         ]) ?>
-		
+
         <?= $this->render('_price', [
             'model' => $model,
             'rating' => $rating
-        ]) ?>        
+        ]) ?>
 
         <?= $this->render('_complects', [
             'complects' => $model->complects,

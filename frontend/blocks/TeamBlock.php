@@ -1,11 +1,12 @@
 <?php
 
-namespace app\modules\catalog\frontend\blocks;
+namespace siripravi\catalog\frontend\blocks;
 
 
 use luya\cms\base\PhpBlock;
 use luya\cms\frontend\blockgroups\ProjectGroup;
 use luya\cms\helpers\BlockHelper;
+
 /**
  * Portfolio Block.
  *
@@ -13,7 +14,7 @@ use luya\cms\helpers\BlockHelper;
  */
 class TeamBlock extends PhpBlock
 {
-   // public $isContainer = true;
+    // public $isContainer = true;
 
     /**
      * @var string The module where this block belongs to in order to find the view files.
@@ -24,7 +25,7 @@ class TeamBlock extends PhpBlock
      * @var bool Choose whether a block can be cached trough the caching component. Be carefull with caching container blocks.
      */
     public $cacheEnabled = true;
-    
+
     /**
      * @var int The cache lifetime for this block in seconds (3600 = 1 hour), only affects when cacheEnabled is true
      */
@@ -45,7 +46,7 @@ class TeamBlock extends PhpBlock
     {
         return 'Team';
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -53,7 +54,7 @@ class TeamBlock extends PhpBlock
     {
         return 'image'; // see the list of icons on: https://design.google.com/icons/
     }
- 
+
     /**
      * @inheritDoc
      */
@@ -61,12 +62,12 @@ class TeamBlock extends PhpBlock
     {
         return [
             'cfgs' => [
-                 ['var' => 'images', 'label' => 'Images', 'type' => self::TYPE_IMAGEUPLOAD_ARRAY, 'options' => ['no_filter' => false]],
+                ['var' => 'images', 'label' => 'Images', 'type' => self::TYPE_IMAGEUPLOAD_ARRAY, 'options' => ['no_filter' => false]],
             ],
         ];
     }
 
-     /**
+    /**
      * @inheritDoc
      */
     public function extraVars()
@@ -80,23 +81,22 @@ class TeamBlock extends PhpBlock
      * {@inheritDoc} 
      *
      * @param {{vars.elements}}
-    */
+     */
     public function admin()
     {
         return '<h5 class="mb-3">Our Team</h5>' .
             '<table class="table table-bordered">' .
             '{% if cfgs.images is not empty %}' .
             '<tr><td><b>Images</b></td><td>{{cfgs.images}}</td></tr>' .
-            '{% endif %}'.
+            '{% endif %}' .
             '</table>';
     }
 
-     /**
+    /**
      * {@inheritdoc}
      */
-   /* public function getViewPath()
+    /* public function getViewPath()
     {
         return  dirname(__DIR__).'/src/views/blocks';
     }  */
 }
-

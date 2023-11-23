@@ -1,11 +1,12 @@
 <?php
 
-namespace app\modules\catalog\frontend\blocks;
+namespace siripravi\catalog\frontend\blocks;
 
 use luya\cms\base\PhpBlock;
-use app\modules\catalog\models\Product;
-use app\modules\catalog\frontend\blockgroups\BlockCollectionGroup;
+use siripravi\catalog\models\Product;
+use siripravi\catalog\frontend\blockgroups\BlockCollectionGroup;
 use yii\data\ActiveDataProvider;
+
 /**
  * Head Teaser Block.
  *
@@ -14,24 +15,24 @@ use yii\data\ActiveDataProvider;
 class HeadTeaserBlock extends PhpBlock
 {
     public $module = 'catalog';
-    
+
     /**
      * @var boolean Choose whether block is a layout/container/segmnet/section block or not, Container elements will be optically displayed
      * in a different way for a better user experience. Container block will not display isDirty colorizing.
      */
-  //  public $isContainer = true;
-    
+    //  public $isContainer = true;
+
     /**
      * @var bool Choose whether a block can be cached trough the caching component. Be carefull with caching container blocks.
      */
     public $cacheEnabled = false;
-    
+
     /**
      * @var int The cache lifetime for this block in seconds (3600 = 1 hour), only affects when cacheEnabled is true
      */
     public $cacheExpiration = 3600;
-    
-    public $product_ids = [2,4];
+
+    public $product_ids = [2, 4];
     public $link;
     /**
      * @inheritDoc
@@ -40,7 +41,7 @@ class HeadTeaserBlock extends PhpBlock
     {
         return BlockCollectionGroup::class;
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -48,7 +49,7 @@ class HeadTeaserBlock extends PhpBlock
     {
         return 'Head Teaser Block';
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -56,7 +57,7 @@ class HeadTeaserBlock extends PhpBlock
     {
         return 'extension'; // see the list of icons on: https://design.google.com/icons/
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -75,20 +76,20 @@ class HeadTeaserBlock extends PhpBlock
     public function extraVars()
     {
         return [
-          //  'menu' => Group::getMenu(),
+            //  'menu' => Group::getMenu(),
             'elements' => $this->getHomeProducts()
         ];
     }
 
     public function getHomeProducts()
     {
-		$query = Product::find();
+        $query = Product::find();
         $query->joinWith(['groups']);
         $query->andWhere(['catalog_product.enabled' => true]);
         $query->andWhere(['catalog_product.id' => $this->product_ids]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> [
+            'sort' => [
                 'defaultOrder' => [
                     'position' => SORT_DESC,
                 ],
@@ -98,13 +99,13 @@ class HeadTeaserBlock extends PhpBlock
                 'pageSizeParam' => false,
                 'pageSize' => 12,
             ],
-        ]);  
-		//$model = Product::find()->where(['id' => $this->product_ids])->all();
-	 return [
-        'dataProvider' => $dataProvider
-    ];	
-	}
-    
+        ]);
+        //$model = Product::find()->where(['id' => $this->product_ids])->all();
+        return [
+            'dataProvider' => $dataProvider
+        ];
+    }
+
     /**
      * {@inheritDoc}
      *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var $this \luya\cms\base\PhpBlockView
  * @var $menuItems \luya\cms\menu\QueryIteratorFilter|\luya\cms\menu\Item[]
@@ -13,4 +14,3 @@ $menuItems = $this->extraValue('menuItems');
     <php endforeach; ?>
 </ul>
 -->
-

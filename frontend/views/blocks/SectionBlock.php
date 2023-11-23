@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View file for block: FeaturesBlock 
  *
@@ -22,8 +23,7 @@ $content = Html::tag('div', $elements, ['class' => $containerHtmlClass]);
 if ($this->varValue('disableWrapper')) {
     echo $content;
 } else {
-    $htmlClass = [$this->cfgValue('htmlClass','container')];
-    
+    $htmlClass = [$this->cfgValue('htmlClass', 'container')];
+
     echo Html::tag('div', $content, ['class' => $htmlClass]);
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: dench
@@ -17,26 +18,26 @@ use yii\helpers\Url;
         <div class="table-responsive">
             <table class="table table-condensed table-default table-width-auto">
                 <thead>
-                <tr>
-                    <th></th>
-                    <th><?= Yii::t('app', 'Price, UAH') ?></th>
-                </tr>
+                    <tr>
+                        <th></th>
+                        <th><?= Yii::t('app', 'Price, UAH') ?></th>
+                    </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($options as $option) : ?>
-                    <tr>
-                        <?php if ($option->enabled) { ?>
-                            <th><a href="<?= Url::to(['/main/product/index', 'slug' => $option->slug]) ?>" target="_blank"><?= $option->name ?></a></th>
-                        <?php } else { ?>
-                            <th><?= $option->name ?></th>
-                        <?php } ?>
-                        <td><?php
-                            $variants = $option->variants;
-                            $variant = current($variants);
-                            echo @$variant->price;
-                            ?></td>
-                    </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($options as $option) : ?>
+                        <tr>
+                            <?php if ($option->enabled) { ?>
+                                <th><a href="<?= Url::to(['/main/product/index', 'slug' => $option->slug]) ?>" target="_blank"><?= $option->name ?></a></th>
+                            <?php } else { ?>
+                                <th><?= $option->name ?></th>
+                            <?php } ?>
+                            <td><?php
+                                $variants = $option->variants;
+                                $variant = current($variants);
+                                echo @$variant->price;
+                                ?></td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>

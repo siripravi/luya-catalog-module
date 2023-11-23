@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
@@ -64,8 +64,7 @@ class ProductCategory extends NgRestModel
      */
     public function ngRestAttributeTypes()
     {
-        return [
-        ];
+        return [];
     }
 
     /**

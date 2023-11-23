@@ -12,7 +12,7 @@ class m221210_134933_add_album_id_to_article_table extends Migration
      */
     public function safeUp()
     {
-      //  $this->addColumn('catalog_article','album_id','integer');
+        //  $this->addColumn('catalog_article','album_id','integer');
 
         $this->createIndex('fk-catalog_article_gallery_album-album_id', 'gallery_album', ['id']);
     }

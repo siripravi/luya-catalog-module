@@ -1,6 +1,6 @@
 <?php
 
-\app\modules\catalog\frontend\assets\Main::register($this);
+\siripravi\catalog\frontend\assets\Main::register($this);
 
 ?>
 <div class="container-fluid">
@@ -13,7 +13,7 @@
                 <div class="col-xs-12 col-md-9 portfolio-menu">
                     <ul>
                         <li id="group_all" style="color: #fe8f00;">All</li>
-                        <?php foreach($groups as $key=>$element){ ?>
+                        <?php foreach ($groups as $key => $element) { ?>
                             <li id="group<?= $key ?>"><?= $element ?></li>
                         <?php } ?>
                     </ul>
@@ -22,7 +22,7 @@
         </div>
         <div class="container-fluid">
             <div class="row">
-                <?php foreach($items as $key=>$element): ?>
+                <?php foreach ($items as $key => $element) : ?>
                     <div class="col-xs-12 col-lg-3 col-md-6 no-padding element_portfolio group<?= $element->group_id ?>" style="background-image: url('<?= $element->img_min_id->getSource() ?>');">
                         <div class="portfolio-fade-in" style="background-color:<?= "red" ?>" data-target="#exampleModal1" data-href="<?= $element->link ?>" data-description="<?= $element->description ?>" data-img="<?= $element->img_max_id->getSource() ?>">
                             <h1><?= $element->group->name ?></h1>

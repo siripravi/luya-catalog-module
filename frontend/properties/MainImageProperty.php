@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\catalog\frontend\properties;
+namespace siripravi\catalog\frontend\properties;
 
-use app\modules\catalog\frontend\Module;
+use siripravi\catalog\frontend\Module;
 use luya\admin\base\ImageProperty;
 
 class MainImageProperty extends ImageProperty
@@ -14,7 +14,7 @@ class MainImageProperty extends ImageProperty
     {
         return 'mainImage';
     }
-    
+
     /**
      * @inheritDoc
      */

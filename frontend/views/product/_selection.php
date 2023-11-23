@@ -1,12 +1,13 @@
 <?php
+
 use yii\widgets\Pjax;
 use yii\base\Widget;
 use yii\helpers\Html;
 //use kartik\widgets\Select2;
-use app\modules\catalog\models\Value;
-use app\modules\catalog\models\ArticleValueRef;
+use siripravi\catalog\models\Value;
+use siripravi\catalog\models\ArticleValueRef;
 use conquer\select2\Select2Widget;
-use app\modules\catalog\frontend\widgets\PriceTable;
+use siripravi\catalog\frontend\widgets\PriceTable;
 ?>
 
 <?php Pjax::begin(['id' => 'feature-pjax']); ?>
@@ -18,20 +19,20 @@ use app\modules\catalog\frontend\widgets\PriceTable;
                     <?php foreach ($features as $feature) : ?>
                         
                                 <?php
-                                  /*  $value_ids = [];
+                                /*  $value_ids = [];
                                     $index = $modelVariant->id;
                                     $list = Value::getList($feature->id);
                                     $value_ids = $modelVariant->value_ids;       
                                   */
                                 ?>
-                                <?=  PriceTable::widget([
-                                        'id' => 'price' . $modelVariant->id,
-                                        'article' => $modelVariant,
-                                        'available' => $available,
-                                        'feature_id' => $feature->id,
-                                        'feature_name'  => $feature->name,
-                                        'value_ids'  => [],//$value_ids,
-                                        'list'       => [], //$list
+                                <?= PriceTable::widget([
+                                  'id' => 'price' . $modelVariant->id,
+                                  'article' => $modelVariant,
+                                  'available' => $available,
+                                  'feature_id' => $feature->id,
+                                  'feature_name'  => $feature->name,
+                                  'value_ids'  => [], //$value_ids,
+                                  'list'       => [], //$list
                                 ]) ?>
                      <?php endforeach; ?>
                   

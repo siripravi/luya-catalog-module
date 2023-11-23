@@ -1,13 +1,13 @@
 <?php
 
-namespace app\modules\catalog\frontend;
+namespace siripravi\catalog\frontend;
 
 use yii\web\View;
 
 class ResourcesAsset extends \luya\web\Asset
 {
     public $sourcePath = '@activeTheme/dist';
-    
+
     public $css = [
         'main.css'
     ];
@@ -15,11 +15,11 @@ class ResourcesAsset extends \luya\web\Asset
     public $js = [
         'main.js',
     ];
-    
+
     public $jsOptions = [
         'async' => true,
     ];
-    
+
     public $depends = [
         'yii\web\JqueryAsset',
     ];

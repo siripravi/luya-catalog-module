@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View file for block: FeatureBlock 
  *
@@ -13,6 +14,7 @@
  * @var string $linkName
  * @var string $iconClass
  */
+
 use yii\helpers\Html;
 use luya\lazyload\LazyLoad;
 
@@ -25,15 +27,15 @@ $image = $this->extraValue('image');
 
 if ($image) {
     $image = LazyLoad::widget([
-		'src' => $image->source,
-		'width' => $image->resolutionWidth,
-		'height' => $image->resolutionHeight,
-	]);
-//	// Todo: LazyLoad ist buggy
-//	$lazyImage = Html::img($image->source, [
-//		'width' => $image->resolutionWidth,
-//		'height' => $image->resolutionHeight,
-//    ]);
+        'src' => $image->source,
+        'width' => $image->resolutionWidth,
+        'height' => $image->resolutionHeight,
+    ]);
+    //	// Todo: LazyLoad ist buggy
+    //	$lazyImage = Html::img($image->source, [
+    //		'width' => $image->resolutionWidth,
+    //		'height' => $image->resolutionHeight,
+    //    ]);
 }
 ?>
 
@@ -45,7 +47,7 @@ if ($image) {
             </div>
         <?php endif ?>
         <header>
-            <?php echo Html::tag($this->cfgValue('title-heading', 'h2'), Html::encode($title))?>
+            <?php echo Html::tag($this->cfgValue('title-heading', 'h2'), Html::encode($title)) ?>
         </header>
 
         <?php if ($text) : ?>
@@ -56,7 +58,7 @@ if ($image) {
 
         <?php if ($url) : ?>
             <ul class="actions">
-                <li><?php echo Html::a($linkName ?: $url->getHref(), $url->getHref(), ['target' => $url->getTarget(), 'class' => 'button style1'])?></li>
+                <li><?php echo Html::a($linkName ?: $url->getHref(), $url->getHref(), ['target' => $url->getTarget(), 'class' => 'button style1']) ?></li>
             </ul>
         <?php endif ?>
     </article>

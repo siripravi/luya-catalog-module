@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\frontend\blockgroups;
+namespace siripravi\catalog\frontend\blockgroups;
 
 use luya\cms\base\BlockGroup;
 use luya\cms\frontend\Module;
@@ -16,12 +16,12 @@ class BlockCollectionGroup extends BlockGroup
     {
         return 'theme-collection-group';
     }
-    
+
     public function label()
     {
         return Module::t('Block Collection');
     }
-    
+
     public function getPosition()
     {
         return 64;

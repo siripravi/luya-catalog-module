@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\admin\apis;
+namespace siripravi\catalog\admin\apis;
 
 /**
  * Article Value Ref Controller.
@@ -12,5 +12,5 @@ class ArticleValueRefController extends \luya\admin\ngrest\base\Api
     /**
      * @var string The path to the model which is the provider for the rules and fields.
      */
-    public $modelClass = 'app\modules\catalog\models\ArticleValueRef';
+    public $modelClass = 'siripravi\catalog\models\ArticleValueRef';
 }

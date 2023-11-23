@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\models;
+namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
@@ -55,7 +55,7 @@ class Unit extends NgRestModel
         return [
             [['name'], 'required'],
             [['position', 'enabled'], 'integer'],
-            [['name','code'], 'string', 'max' => 255],
+            [['name', 'code'], 'string', 'max' => 255],
         ];
     }
 
@@ -78,8 +78,8 @@ class Unit extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name','code','position', 'enabled']],
-            [['create', 'update'], ['name', 'code','position', 'enabled']],
+            ['list', ['name', 'code', 'position', 'enabled']],
+            [['create', 'update'], ['name', 'code', 'position', 'enabled']],
             ['delete', false],
         ];
     }

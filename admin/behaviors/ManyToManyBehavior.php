@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\catalog\admin\behaviors;
+namespace siripravi\catalog\admin\behaviors;
 
 use Yii;
 use yii\base\Behavior;
@@ -72,7 +72,7 @@ class ManyToManyBehavior extends Behavior
             //add secondary fields
             if (isset($params['fields'])) {
                 foreach ($params['fields'] as $fieldName => $params) {
-                    $fullFieldName = $attributeName.'_'.$fieldName;
+                    $fullFieldName = $attributeName . '_' . $fieldName;
                     if (isset($this->_fields[$fullFieldName])) {
                         throw new ErrorException("Ambiguous field name definition: {$fullFieldName}");
                     }
@@ -183,7 +183,7 @@ class ManyToManyBehavior extends Behavior
                     throw $ex;
                 }
 
-            // one-to-many on the many side
+                // one-to-many on the many side
             } elseif (!empty($relation->link) && $relation->multiple) {
 
                 //HasMany, primary model HAS MANY foreign models, must update foreign model table
@@ -204,7 +204,8 @@ class ManyToManyBehavior extends Behavior
                         ->update(
                             $manyTable,
                             [$manyTableFkColumn => $defaultValue],
-                            [$manyTableFkColumn => $manyTableFkValue])
+                            [$manyTableFkColumn => $manyTableFkValue]
+                        )
                         ->execute();
 
                     // Write new relations
@@ -213,7 +214,8 @@ class ManyToManyBehavior extends Behavior
                             ->update(
                                 $manyTable,
                                 [$manyTableFkColumn => $manyTableFkValue],
-                                ['in', $manyTablePkColumn, $bindingKeys])
+                                ['in', $manyTablePkColumn, $bindingKeys]
+                            )
                             ->execute();
                     }
                     $transaction->commit();
@@ -221,7 +223,6 @@ class ManyToManyBehavior extends Behavior
                     $transaction->rollback();
                     throw $ex;
                 }
-
             } else {
                 throw new ErrorException('Relationship type not supported.');
             }
