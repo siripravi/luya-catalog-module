@@ -12,6 +12,9 @@
       "email": "provdigi@gmail.com"
     }
   ],
+  "require" : {
+    "yiisoft/yii2-bootstrap5": "~2.0.2"
+	},
   "autoload": {
     "psr-4": {
       "siripravi\\catalog\\": "src/"
