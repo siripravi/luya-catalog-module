@@ -14,7 +14,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "siripravi\\catalog\\admin\\": "src/"
+      "siripravi\\catalog\\": "src/"
     }
   },
   "config": {
