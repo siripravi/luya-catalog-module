@@ -21,7 +21,8 @@ class Related extends NgRestModel
      */
     public static function tableName()
     {
-        return 'catalog_related';
+       // return 'catalog_product_related';
+        return 'catalog_product_related';
     }
 
     /**
