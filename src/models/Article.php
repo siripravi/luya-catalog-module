@@ -195,6 +195,8 @@ class Article extends NgRestModel
         return $this->hasOne(Product::class, ['id' => 'product_id']);
     }
 
+    
+
     /**
      * Get the Album.
      *

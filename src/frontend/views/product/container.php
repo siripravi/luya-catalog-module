@@ -90,3 +90,4 @@ use yii\widgets\Pjax;
         'viewed' => $viewed,
         'similar' => $similar,
     ]) ?>
+</div>    
