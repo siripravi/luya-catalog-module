@@ -21,8 +21,8 @@ class ProductRelatedRef extends NgRestModel
      */
     public static function tableName()
     {
-       // return 'catalog_product_related_ref';
-       return 'catalog_product_related';
+       return 'catalog_product_related_ref';
+      
     }
 
     /**
