@@ -269,9 +269,9 @@ class Article extends NgRestModel
 
     private function updateValues($data)
     {
-        // $data = [["31"=>1]];
+
         if (!empty($data)) {
-            //  print_r($data);die;
+
             $this->unlinkAll('attributeValues', true);
 
             foreach ($data as $setId => $values) {
@@ -367,7 +367,7 @@ class Article extends NgRestModel
     {
 
         if (empty($this->_currency)) {
-            $this->_currency = Currency::findOne(1);  //Yii::$app->params['currency_id']);
+            $this->_currency = Currency::findOne(['code'=>'INR']);  //Yii::$app->params['currency_id']);
         }
 
         if (empty($this->_currency)) {
