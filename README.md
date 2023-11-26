@@ -1,4 +1,4 @@
-# Eshop Module
+# Catalog Module for Luya CMS
 
 File has been created with `module/create` command.
 
