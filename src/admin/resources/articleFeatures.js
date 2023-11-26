@@ -42,10 +42,7 @@ zaa.directive("articleFeatures", function () {
         };
 
         $scope.toggleValSel = function (f, v) {
-          //$scope.model = [{33:1}];
-          //console.log("MODEL",f,v);
-          //console.log(JSON.stringify($scope.model));
-          var tof = 33; //$scope.model[f][v];
+          var tof = $scope.model[f][v];
           $scope.model[f][v] = tof == 1 ? 0 : 1;
         };
       },
