@@ -60,33 +60,33 @@ use yii\widgets\Pjax;
         ?>
 
         <?php ActiveForm::end(); ?>
-
     </div>
-    <!--?= $this->render('_photo', [
+</div>
+<!--?= $this->render('_photo', [
             'model' => $model,
         ]) ?-->
 
-    <!--?= $this->render('_text', [
+<!--?= $this->render('_text', [
             'name' => $model->name,
             'text' => $model->text,
         ]) ?-->
-    <!--?= $this->render('_price', [
+<!--?= $this->render('_price', [
             'model' => $model,
            // 'rating' => $rating
         ]) ?-->
-    <!--?= $this->render('_feature_simple', [
+<!--?= $this->render('_feature_simple', [
             'model' => $model,
         ]) ?-->
 
-    <!--?= $this->render('_complects', [
+<!--?= $this->render('_complects', [
     'complects' => $model->related,
 ]) ?-->
 
-    <!--= $this->render('_options', [
+<!--= $this->render('_options', [
     'options' => $model->options,
 ]) ?-->
 
-    <?= $this->render('_similar', [
-        'viewed' => $viewed,
-        'similar' => $similar,
-    ]) ?>
+<?= $this->render('_similar', [
+    'viewed' => $viewed,
+    'similar' => $similar,
+]) ?>

@@ -371,7 +371,7 @@ class Article extends NgRestModel
         }
 
         if (empty($this->_currency)) {
-            return $this->currency;
+            return $this->_currency;
         } else {
             return  $this->_currency;
         }
