@@ -10,7 +10,7 @@ zaa.directive("articleFeatures", function () {
       "$http",
       function ($scope, $http) {
         $scope.$watch("article", function (n, o) {
-          console.log(n, o);
+          console.log($scope.article);
           if (n != null && n) {
             $scope.getArticleFeaturesData(n);
           }
@@ -27,6 +27,7 @@ zaa.directive("articleFeatures", function () {
           $http
             .get("admin/api-catalog-product/features?id=" + id)
             .then(function (r) {
+              console.log("RET:", JSON.stringify(r.data));
               var selected = r.data.selected;
               var fVals = r.data.fVals;
               $scope.model = selected;
@@ -41,7 +42,10 @@ zaa.directive("articleFeatures", function () {
         };
 
         $scope.toggleValSel = function (f, v) {
-          var tof = $scope.model[f][v];
+          //$scope.model = [{33:1}];
+          //console.log("MODEL",f,v);
+          //console.log(JSON.stringify($scope.model));
+          var tof = 33; //$scope.model[f][v];
           $scope.model[f][v] = tof == 1 ? 0 : 1;
         };
       },

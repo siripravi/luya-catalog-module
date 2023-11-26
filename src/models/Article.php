@@ -110,9 +110,8 @@ class Article extends NgRestModel
             [['product_id', 'unit_id', 'available', 'image_id', 'album_id', 'created_at', 'updated_at', 'position', 'enabled'], 'integer'],
             // [['price', 'price_old'], 'number'],
             [['code'], 'string', 'max' => 255],
-            [['values', 'text'], 'safe'],
+            [['id', 'values', 'text'], 'safe'],
             // [['adminFeatures'], 'safe'],
-
             [['value_ids'], 'each', 'rule' => ['integer']]
         ];
     }
@@ -195,8 +194,6 @@ class Article extends NgRestModel
         return $this->hasOne(Product::class, ['id' => 'product_id']);
     }
 
-    
-
     /**
      * Get the Album.
      *
@@ -272,7 +269,9 @@ class Article extends NgRestModel
 
     private function updateValues($data)
     {
+        // $data = [["31"=>1]];
         if (!empty($data)) {
+            //  print_r($data);die;
             $this->unlinkAll('attributeValues', true);
 
             foreach ($data as $setId => $values) {

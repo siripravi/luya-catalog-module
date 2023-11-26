@@ -31,40 +31,27 @@ class ProductController extends \luya\admin\ngrest\base\Api
         $value_ids = [];
         $model = Article::find(['id' => $id])->one();
         $product = $model->product;
-        $value_ids = ArticleValueRef::getList($id); //["28", "29", "30"];  //$model->value_ids;
-        //  print_r($value_ids); die;
+        $value_ids = ArticleValueRef::getList($id);
+
         if ($product->group_ids)
             $features = Feature::getObjectList(true, $product->group_ids);
         else
             $features = [];
-        $list = [];
 
-        /*foreach ($features as $set) {
-            foreach ($model->value_ids as $value_id) {
-                if (in_array($value_id,$list)) {
-                    $value_ids[] = $value_id;
-                }
-            }       
-        }*/
         $data = [];
         $featureVals = [];
-        /* $list = ArticleValueRef::getList($id);
-        foreach ($model->value_ids as $value_id) {
-            if (in_array($value_id,$list)) {
-                $value_ids[] = $value_id;
-            }
-        }   */
+
         foreach ($features as $set) {
 
             $featureVals[] = [
                 'set' => $set,
-                'attributes' => Value::getList($set->id), //foreach ($list as $i=> $item){
+                'attributes' => Value::getList($set->id),
                 'preSel'  => $value_ids
             ];
         }
         $data['fVals'] = $featureVals;
         $data['preSel'] = array_values($value_ids);
-        $data['selected'] = $this->setAttributes($value_ids, $model->getValues());  //($value_ids);
+        $data['selected'] = $this->setAttributes($value_ids, $model->getValues());
         return $data;
     }
 
@@ -76,10 +63,11 @@ class ProductController extends \luya\admin\ngrest\base\Api
             foreach ($keys as $k) {
                 if (in_array($k, $value_ids)) {
                     $data[$key][$k] = 1;
+                } else {
+                    $data[$key][$k] = 0;
                 }
             }
         }
-        // print_r($list);die;
         return $data;
     }
 }

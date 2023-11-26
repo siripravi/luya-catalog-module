@@ -8,7 +8,7 @@
 
 use app\resources\assets\AppAsset;
 
-//AppAsset::register($this);
+AppAsset::register($this);
 $this->beginPage();
 ?>
 <!DOCTYPE html>

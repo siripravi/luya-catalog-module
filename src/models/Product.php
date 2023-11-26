@@ -236,12 +236,12 @@ class Product extends NgRestModel
 
     public static function viewPage($id)
     {
-        if (is_numeric($id)) {
-            $page = self::find()->where(['id' => $id])->one();
-        } else {
-            $page = self::find()->where(['slug' => $id])->one();
-            //echo $page->id; die;  //->createCommand()->getRawSql(); die;
-        }
+        // if (is_numeric($id)) {
+        $page = self::find()->where(['id' => $id])->one();
+        // } else {
+        //      $page = self::find()->where(['slug' => $id])->one();
+        //echo $page->id; die;  //->createCommand()->getRawSql(); die;
+        //  }
         if ($page === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

@@ -1,6 +1,6 @@
 <?php
 
-//\siripravi\catalog\frontend\assets\Main::register($this);
+\siripravi\catalog\frontend\assets\Main::register($this);
 
 ?>
 <div class="container-fluid">
@@ -23,9 +23,9 @@
         <div class="container-fluid">
             <div class="row">
                 <?php foreach ($items as $key => $element) : ?>
-                    <div class="col-xs-12 col-lg-3 col-md-6 no-padding element_portfolio group<!--?= $element->group_id ?-->" style="background-image: url('<!--?= $element->img_min_id->getSource() ?-->');">
-                        <div class="portfolio-fade-in" style="background-color:<?= "red" ?>" data-target="#exampleModal1" data-href="<!--?= $element->link ?-->" data-description="<!--?= $element->description ?-->" data-img="<!--?= $element->img_max_id->getSource() ?-->">
-                            <h1><?= $element->groups[0]->teaser ?></h1>
+                    <div class="col-xs-12 col-lg-3 col-md-6 no-padding element_portfolio group<!--= $element->group_id ?-->" style="background-image: url('<?= $element->image_id->getSource() ?>');">
+                        <div class="portfolio-fade-in" style="background-color:<?= "red" ?>" data-target="#exampleModal1" data-href="<!--?= $element->link ?-->" data-description="<!--?= $element->description ?-->" data-img="<?= $element->image_id->getSource() ?>">
+                            <h1><?= $element->group->name ?></h1>
                             <h2><?= strtoupper($element->name) ?></h2>
                             <i class="fa fa-angle-right"></i>
                         </div>

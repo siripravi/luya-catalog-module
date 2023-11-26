@@ -221,7 +221,7 @@ class Group extends NgRestModel
 
     public static function getElements()
     {
-        $categories = !Yii::$app->cache->exists('_categories-' . Yii::$app->language) ? Group::getMain() : [];
+        $categories = Group::getMain(); // !Yii::$app->cache->exists('_categories-' . Yii::$app->language) ? Group::getMain() : [];
         //$categories = Group::getMain();
         $query = Product::find();
         $query->joinWith(['groups']);
