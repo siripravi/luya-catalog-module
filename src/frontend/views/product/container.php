@@ -14,19 +14,19 @@ use yii\widgets\Pjax;
     'model' => $model,
 ]); ?>
 
-<div class="breadcrumbs">
+<!--<div class="breadcrumbs">
     <a class="back hide-on-320" href="/menu">
         <img src="/image/site/img/back-mobile.png" class="visible-xs" alt="" width="63" height="64">
         <span>Go Back</span>
     </a>
-</div>
+</div> -->
 
 <h2 class="mb-3 text-center heading"><?= $model->name ?></h2>
 
 <div class="container" style="margin-top:44px;">
     <div class="row product-detail">
 
-        <?php $form = ActiveForm::begin([
+        <!--php $form = ActiveForm::begin([
             'enableClientValidation' => false,
             'enableAjaxValidation' => true,
             'validateOnChange' => true,
@@ -35,13 +35,13 @@ use yii\widgets\Pjax;
                 'enctype' => 'multipart/form-data',
                 'id' => 'product-form',
             ]
-        ]); ?>
+        ]); ?-->
         <?php $items = [];
 
         foreach ($model->articles as $index => $article) {
             $items[] = [
                 'label' => $article->name,
-                'content' => $this->render("_article", ['modelVariant' => $article, 'features' => $features, 'form' => $form]),
+                'content' => $this->render("_article", ['modelVariant' => $article, 'features' => $features]),  //, 'form' => $form]),
                 'active' => ($index == 0)
             ];
         }
@@ -59,12 +59,12 @@ use yii\widgets\Pjax;
         ]);
         ?>
 
-        <?php ActiveForm::end(); ?>
+        <!--?php ActiveForm::end(); ?-->
     </div>
 </div>
-<!--?= $this->render('_photo', [
+<?= $this->render('_photo', [
             'model' => $model,
-        ]) ?-->
+        ]) ?>
 
 <!--?= $this->render('_text', [
             'name' => $model->name,

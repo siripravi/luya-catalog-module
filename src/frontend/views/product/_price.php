@@ -52,7 +52,7 @@ if (@$model->prices) {
         <?php endif; ?>
     </div>
 
-    <?php Pjax::begin(['id' => 'pjax']); ?>
+    <!--php Pjax::begin(['id' => 'pjax']); ?-->
     <?=
     $this->render('_selection', [
         //'model' => $model,
@@ -62,5 +62,10 @@ if (@$model->prices) {
         'features' => $features
     ])
     ?>
-    <?php Pjax::end();  ?>
+    <!--php Pjax::end();  ?-->
+    <?php if ($available !== 0): ?>
+                  <!--  <button class="btn btn-primary btn-block btn-buy" rel="price?= $model->id ?>"><= $available > 0 ? Yii::t('app', 'Buy') : Yii::t('app', 'To order') ?></button>  -->
+                  <button data-bs-target="#offcanvasCart" data-bs-toggle="offcanvas" class="btn btn-success btn-buy" rel="price<?= $model->id ?>">
+					<?= $available > 0 ? Yii::t('app', 'Order This') : Yii::t('app', 'Buy This') ?></button>
+                 <?php endif; ?>
 </div>

@@ -2,22 +2,29 @@
 
 namespace siripravi\catalog\frontend\controllers;
 
-use siripravi\catalog\models\Group;
-use siripravi\catalog\models\Article;
-use Yii;
-use yii\web\View;
-use yii\web\NotFoundHttpException;
-use Exception;
-use luya\cms\frontend\base\Controller;
-use luya\helpers\StringHelper;
-use luya\cms\models\Redirect;
+use siripravi\catalog\actions\DeliveryAction;
+use siripravi\catalog\actions\PaymentAction;
 use siripravi\catalog\models\Cart;
 use siripravi\catalog\models\Order;
 use siripravi\catalog\models\OrderForm;
 use siripravi\catalog\widgets\CartWidget;
+//use app\helpers\ImageHelper;
+//use app\modules\page\models\Page;
+use siripravi\catalog\models\Article;
+use Yii;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\Json;
+use yii\helpers\Url;
+use yii\web\Controller;
 
-class DefaultController extends Controller
+/**
+ * Class CartController
+ * @package app\controllers
+ */
+class BagController extends Controller
 {
+
     /**
      * @return array
      */
@@ -38,26 +45,11 @@ class DefaultController extends Controller
             'payment' => PaymentAction::class,
         ];
     }
+
     /**
-     * @inheritdoc
-     */
-    public $enableCsrfValidation = false;
-
-    public function actionIndex()
-    {
-        $groups = Group::getMenu();
-        $items = Article::getElements();
-
-        return $this->render('index', [
-            'groups' => $groups,
-            'items' => $items
-        ]);
-    }
-
-     /**
      * @return string|\yii\web\Response
      */
-    public function actionCart()
+    public function actionIndex()
     {
        // $page = Page::viewPage('shopping-cart',true);
 
@@ -93,13 +85,13 @@ class DefaultController extends Controller
                 foreach ($order->products as $product) {
                     $image = null;
                     if ($product->image) {
-                        $image = "";//Url::to(ImageHelper::thumb($product->image->id, 'micro'), 'https');
+                        $image = Url::to(ImageHelper::thumb($product->image->id, 'micro'), 'https');
                     } elseif ($product->product->image) {
-                        $image = "";//Url::to(ImageHelper::thumb($product->product->image->id, 'micro'), 'https');
+                        $image = Url::to(ImageHelper::thumb($product->product->image->id, 'micro'), 'https');
                     }
                     $products[] = [
                         'imageUrl' => $image,
-                        'url' => Url::to(['/catalog/product/index', 'slug' => $product->product->slug], 'https'),
+                        'url' => Url::to(['/product/index', 'slug' => $product->product->slug], 'https'),
                         'name' => (string)$order->cartItemName[$product->id],
                         'cost' => (string)$order->cartItemPrice[$product->id],
                         'quantity' => (string)$order->cartItemCount[$product->id],
@@ -120,7 +112,7 @@ class DefaultController extends Controller
             return $this->redirect(['/order', 'id' => $order_id, 'hash' => md5($order_id . Yii::$app->params['order_secret'])]);
         }
 
-        return $this->render('cart', [
+        return $this->render('index', [
           //  'page' => $page,
             'items' => $items,
             'cart' => $cart,
@@ -130,20 +122,40 @@ class DefaultController extends Controller
     }
 
     /**
-     * @return int Calculate the number of basket items
+     * @return string
      */
-    public function getBasketCount()
+    public function actionModal()
     {
-        return 10;
+        $footer = Html::button(Yii::t('app', 'Continue shopping'), ['class' => 'btn btn-primary mr-auto', 'data-dismiss' => 'modal']);
+        $footer .= Html::a(Yii::t('app', 'Place an order'), ['/bag/index'], ['class' => 'btn btn-warning']);
+
+        $cart = Cart::getCart();
+
+        $variant_ids = array_keys($cart);
+
+        $items = Variant::find()->where(['id' => $variant_ids])->andWhere(['enabled' => true])->all();
+
+        $data = [
+            'title' => Yii::t('app', 'Buy'),
+            'body' => $this->renderAjax('modal', [
+                'items' => $items,
+                'cart' => $cart,
+            ]),
+            'footer' => $footer,
+            'dialog' => 'modal-lg',
+        ];
+
+        return Json::encode($data);
     }
 
-     /**
+
+    /**
      * @return string
      */
     public function actionOffcanvas()
     {
         $footer = Html::button(Yii::t('app', 'Continue shopping'), ['class' => 'btn btn-primary mr-auto', 'data-dismiss' => 'modal']);
-        $footer .= Html::a(Yii::t('app', 'Place an order'), ['cart'], ['class' => 'btn btn-warning']);
+        $footer .= Html::a(Yii::t('app', 'Place an order'), ['/bag/index'], ['class' => 'btn btn-warning']);
         $cart = Cart::getCart();
         $variant_ids = array_keys($cart);
 
@@ -162,24 +174,6 @@ class DefaultController extends Controller
         return Json::encode($data);
     }
 
-
-    /**
-     * Returns all basket items for this user.
-     */
-    public function actionBasket()
-    {
-        // add your basket action logic
-        return $this->renderLayout('basket', ['morning' => 'MORNING']);
-    }
-
-    /**
-     * Display confirmation page.
-     */
-    public function actionConfirm()
-    {
-        // add your confirmation action logic
-        return $this->renderLayout('confirm');
-    }
 
     /**
      * @return string

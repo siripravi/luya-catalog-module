@@ -23,7 +23,7 @@ class CategoryController extends BaseController
             throw new NotFoundHttpException('The requested page does not exist.');
         }*/
 
-        $categories = !Yii::$app->cache->exists('_categories-' . Yii::$app->language) ? Group::getMain() : [];
+        $categories = Group::getMain(); //!Yii::$app->cache->exists('_categories-' . Yii::$app->language) ? Group::getMain() : [];
 
         $query = Product::find();
         $query->joinWith(['categories']);

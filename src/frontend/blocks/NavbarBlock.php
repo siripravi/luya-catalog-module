@@ -49,7 +49,7 @@ class NavbarBlock extends PhpBlock
      */
     public function icon()
     {
-        return 'image'; // see the list of icons on: https://design.google.com/icons/
+        return 'local_mall'; // see the list of icons on: https://design.google.com/icons/
     }
 
     /**
