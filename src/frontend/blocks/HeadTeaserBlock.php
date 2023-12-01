@@ -55,7 +55,7 @@ class HeadTeaserBlock extends PhpBlock
      */
     public function icon()
     {
-        return 'extension'; // see the list of icons on: https://design.google.com/icons/
+        return 'local_mall'; // see the list of icons on: https://design.google.com/icons/
     }
 
     /**

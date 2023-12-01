@@ -4,7 +4,7 @@ namespace siripravi\catalog\frontend\blocks;
 
 use yii;
 use luya\cms\base\PhpBlock;
-use luya\cms\frontend\blockgroups\ProjectGroup;
+use siripravi\catalog\frontend\blockgroups\BlockCollectionGroup;
 use luya\cms\helpers\BlockHelper;
 use siripravi\catalog\models\Product;
 use luya\cms\injectors\ActiveQueryCheckboxInjector;
@@ -39,7 +39,7 @@ class RelatedGroupBlock extends PhpBlock
      */
     public function blockGroup()
     {
-        return ProjectGroup::class;
+        return BlockCollectionGroup::class;
     }
 
     /**

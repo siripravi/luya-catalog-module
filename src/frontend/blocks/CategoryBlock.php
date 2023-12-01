@@ -42,7 +42,7 @@ class CategoryBlock extends PhpBlock
      */
     public function name()
     {
-        return 'Group List';
+        return 'Group Listing';
     }
 
     /**

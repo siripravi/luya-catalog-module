@@ -12,6 +12,7 @@ use luya\cms\frontend\Module;
  */
 class BlockCollectionGroup extends BlockGroup
 {
+   
     public function identifier()
     {
         return 'theme-collection-group';
@@ -19,7 +20,7 @@ class BlockCollectionGroup extends BlockGroup
 
     public function label()
     {
-        return Module::t('Block Collection');
+        return Module::t('Catalog Blocks');
     }
 
     public function getPosition()
