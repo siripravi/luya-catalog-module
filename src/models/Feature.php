@@ -6,6 +6,7 @@ use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use siripravi\catalog\admin\behaviors\ManyToManyBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * Feature.

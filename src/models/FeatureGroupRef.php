@@ -4,7 +4,7 @@ namespace siripravi\catalog\models;
 
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
-
+use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
 /**
  * Feature Group Ref.
  * 
@@ -12,6 +12,8 @@ use luya\admin\ngrest\base\NgRestModel;
  *
  * @property integer $feature_id
  * @property integer $group_id
+ * @property integer $position
+ *  @property integer $is_base
  */
 class FeatureGroupRef extends NgRestModel
 {
@@ -28,7 +30,7 @@ class FeatureGroupRef extends NgRestModel
      */
     public static function ngRestApiEndpoint()
     {
-        return 'api-catalog-featuregroupref';
+        return 'api-catalog-featuregroupref';  
     }
 
     /**
@@ -39,6 +41,8 @@ class FeatureGroupRef extends NgRestModel
         return [
             'feature_id' => Yii::t('app', 'Feature ID'),
             'group_id' => Yii::t('app', 'group ID'),
+            'position' => Yii::t('app', 'Position'),
+            'is_base' => Yii::t('app', 'Main?'),
         ];
     }
 
@@ -48,8 +52,8 @@ class FeatureGroupRef extends NgRestModel
     public function rules()
     {
         return [
-            [['feature_id', 'group_id'], 'required'],
-            [['feature_id', 'group_id'], 'integer'],
+            [['feature_id', 'group_id','position','is_base'], 'required'],
+            [['feature_id', 'group_id','position','is_base'], 'integer'],
         ];
     }
 
@@ -58,9 +62,11 @@ class FeatureGroupRef extends NgRestModel
      */
     public function ngRestAttributeTypes()
     {
-        return [
-            'feature_id' => 'number',
-            'group_id' => 'number',
+        return [           
+            'feature_id' => ['class' => SelectRelationActiveQuery::class, 'query' => $this->getFeature(), 'labelField' => ['name'], 'asyncList' => true],
+            'group_id' => ['class' => SelectRelationActiveQuery::class, 'query' => $this->getGroup(), 'labelField' => ['name'], 'asyncList' => true],
+            'position'  => 'number',
+            'is_base' => ['toggleStatus', 'initValue' => 0],
         ];
     }
 
@@ -71,9 +77,25 @@ class FeatureGroupRef extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['feature_id', 'group_id']],
-            [['create', 'update'], ['feature_id', 'group_id']],
+            ['list', ['feature_id', 'group_id','position','is_base']],
+            [['create', 'update'], ['feature_id', 'position','is_base']],
             ['delete', false],
         ];
+    }
+
+    /**
+     * @return Feature
+     */
+    public function getFeature()
+    {
+        return $this->hasOne(Feature::class, ['id' => 'feature_id']);
+    }
+
+     /**
+     * @return Feature
+     */
+    public function getGroup()
+    {
+        return $this->hasOne(Group::class, ['id' => 'group_id']);
     }
 }

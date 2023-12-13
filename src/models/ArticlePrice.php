@@ -5,7 +5,7 @@ namespace siripravi\catalog\models;
 use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
-
+use luya\helpers\ArrayHelper;
 /**
  * Article Price.
  *
@@ -127,7 +127,7 @@ class ArticlePrice extends NgRestModel
 
     public function getValues()
     {
-        return $this->hasMany(Value::class, ['id' => 'value_id'])->viaTable(ArticleValueRef::tableName(), ['value_id' => 'id'])->where(['article_id']);
+        return $this->hasMany(Value::class, ['id' => 'value_id'])->viaTable(ArticleValueRef::tableName(), ['value_id' => 'id'])->where(['article_id'=>'id']);
         //return $this->hasMany(ArticleValueRef::class, ['article_id' => 'id']);
 
     }
@@ -150,7 +150,6 @@ class ArticlePrice extends NgRestModel
      */
     public static function getPriceList($article_id, $feature_id)
     {
-
         $values = self::find()
             ->joinWith('values')
             // ->joinWith(['values.feature'])
@@ -159,6 +158,8 @@ class ArticlePrice extends NgRestModel
             ->orderBy('position')
             ->all();
 
-        return ArrayHelper::map($values, 'id', 'name');
+            return ArrayHelper::map($values, 'id', 'name');
+        
+      
     }
 }

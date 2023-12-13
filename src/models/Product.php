@@ -243,7 +243,7 @@ class Product extends NgRestModel
         //echo $page->id; die;  //->createCommand()->getRawSql(); die;
           }
         if ($page === null) {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new \NotFoundHttpException('The requested page does not exist.');
         }
         Yii::$app->view->params['page'] = $page;
         Yii::$app->view->title = $page->name;

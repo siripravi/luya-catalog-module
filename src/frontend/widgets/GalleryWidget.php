@@ -24,7 +24,7 @@
 
 namespace siripravi\catalog\frontend\widgets;
 
-use app\resources\PhotoswipeAsset;
+use siripravi\catalog\frontend\assets\PhotoswipeAsset;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;

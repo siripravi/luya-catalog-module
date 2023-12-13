@@ -9,7 +9,7 @@
 
 namespace siripravi\catalog\frontend\widgets;
 
-//use app\models\Review;
+use siripravi\catalog\models\Review;
 use siripravi\catalog\models\Product;
 use yii\base\Widget;
 use yii\helpers\Url;
@@ -30,7 +30,7 @@ class ProductCard extends Widget
 
     public function run()
     {
-        /* $rating = Review::find()
+         $rating = Review::find()
             ->select(['SUM(rating) sum', 'COUNT(*) count'])
             ->where(['status' => Review::STATUS_PUBLISHED, 'product_id' => $this->model->id])
             ->asArray()
@@ -43,12 +43,12 @@ class ProductCard extends Widget
                 'count' => 0,
                 'value' => 0,
             ];
-        }*/
+        }
 
         return $this->render('productCard', [
             'model' => $this->model,
             'link' => $this->link,
-            //  'rating' => $rating,
+            'rating' => $rating,
         ]);
     }
 }

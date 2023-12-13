@@ -18,12 +18,9 @@ class ProductController extends BaseController
     // use BlockTrait;
 
     public function actionIndex($slug)
-    {    //echo $slug; die;
+    {  
         $model = Product::viewPage($slug);
 
-        /*  echo "<pre>";
-        print_r($slug);
-        die;  */
         if (!$model->enabled) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

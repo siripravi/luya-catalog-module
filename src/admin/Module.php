@@ -16,6 +16,7 @@ class Module extends \luya\admin\base\Module
         'api-catalog-group'         => 'siripravi\catalog\admin\apis\GroupController',
         'api-catalog-product'       => 'siripravi\catalog\admin\apis\ProductController',
         'api-catalog-set'           => 'siripravi\catalog\admin\apis\SetController',
+        'api-catalog-featuregroupref' => 'siripravi\catalog\admin\apis\FeatureGroupRefController',
         //'api-catalog-articlevalueref'  => 'siripravi\catalog\admin\apis\ArticleValueRefController',
         'api-catalog-article'       => 'siripravi\catalog\admin\apis\ArticleController',
         'api-catalog-feature'          => 'siripravi\catalog\admin\apis\FeatureController',
@@ -36,6 +37,7 @@ class Module extends \luya\admin\base\Module
             ->node('Shop Catalog', 'local_mall')
             ->group('Products')
             ->itemApi('Groups', 'catalogadmin/group/index', 'folder', 'api-catalog-group')
+            ->itemApi('Group Features', 'catalogadmin/feature-group-ref/index', 'library_books', 'api-catalog-featuregroupref')
             ->itemApi('Products', 'catalogadmin/product/index', 'library_books', 'api-catalog-product')
             ->itemApi('Articles', 'catalogadmin/article/index', 'list', 'api-catalog-article')
             ->itemApi('Related', 'catalogadmin/related/index', 'domain', 'api-catalog-related')

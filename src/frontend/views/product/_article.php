@@ -23,7 +23,6 @@
             'text' => $modelVariant->text,
         ]) ?>
 
-
         <?= $this->render('_price', [
             'model' => $modelVariant,
             'features' => $features

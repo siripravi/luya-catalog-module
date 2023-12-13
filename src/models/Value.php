@@ -113,7 +113,29 @@ class Value extends NgRestModel
         return ArrayHelper::map($values, 'id', 'name');
     }
 
-
+    /**
+     * @param integer|null $feature_id
+     * @return array
+     */
+    public static function getValueList($feature,$value_ids)
+    {
+        $values = self::find()->andFilterWhere(['feature_id' => $feature])->andFilterWhere(['id'=>$value_ids])->orderBy('position')->all();
+       
+       ArrayHelper::map($values, 'id', 'name');
+       return ArrayHelper::map($values, 'id', 
+        function($element){
+              return([
+               //  'feature_id'=>$element['feature_id'],
+                'name' => $element['name'],
+                'position' => $element['position'],
+                'currency_id' => '',
+                'qty' => '',
+                'unit_id' => '',
+                'price' => ''
+              ]);
+            } ,'feature_id');              
+ 
+    }
 
     public static function getListEx($feature_id, $group_id)
     {

@@ -35,97 +35,53 @@ class PriceTable extends Widget
     public $list;
     public $feature_id;
     public $feature_name;
+
+    public $features;
     public function run()
     {
-        /** @var $articles Variant[] */
-        $variant = "";
-        $value_ids = [];
-        $list = [];
-        $feature_id = null;
-        $feature_name = "";
-        if ($this->article->enabled) {
-            $variant = $this->article;
-            $value_ids = $this->value_ids;
-            $list = $this->list;
-            $feature_id = $this->feature_id;
-            $feature_name = $this->feature_name;
-        }
-        foreach ($value_ids as $vid) {
-        }
         $this->registerClientScript();
 
-
-        $priceList = $variant->getPricesDef($feature_id);
-        echo "<div class='row'><div class='col-md-12'>";
-        echo "<label>" . $feature_name . "</label>";
-        echo "<div class='styled-select decoration'>";
-        echo Html::dropDownList(
-            'buy[' . $variant->product_id . '][2]',
-            "",
-            ArrayHelper::map($priceList, "price", "priceLabel")
-            //['value' => $variant->id]) . ' ' . $variant->name, ['class' => $availableClass
-
-        );
-        echo "</div></div></div>";
+        foreach ($this->features as $id => $feature) {
+            $priceList = $this->article->getPricesDef($feature->id);            
+            echo "<h5>" . $feature->name . "</h5>";
+            echo "<div class='card card-outline featSel p-4'>";
+            echo yii\bootstrap5\Html::radioList(
+                'buy[' . $this->article->product_id . '][' . $feature->id . ']',
+                "",
+                ArrayHelper::map($priceList[$feature->id], "price", "priceLabel"),
+                [
+                    'item' => function ($index, $label, $name, $checked, $value) {
+                        $checked = ($index == 0 && $value > 0)? 'checked':'';
+                        $return = '<div class="col-3 fsel '.$checked.'">';
+                        $return .= '<input type="radio" id="' . $name . $index . '" class="btn-check" name="' . $name . '" value="' . $value . '"  title="click" autocomplete="off" '.$checked.'>';
+                        $return .= '<label class="btn btn-outline-warning" for="' . $name . $index . '">' . '<i class="bi bi-circle pe-2" style="font-size:34px;"></i>' . ucwords($label) . '</label>';
+                        $return .= "</div>";
+                        return $return;
+                    },
+                    'class' => 'row text-inline'
+                ]
+            );
+            echo "</div>";
+        }
     }
 
     private function registerClientScript()
     {
         $url_add = Url::to($this->urlCartAdd);
-
-        $url_cart_modal = Url::to(['/bag/offcanvas']);
-
+        $url_cart_modal = Url::to(['/cart/bag/offcanvas']);
         $js = <<< JS
-var eq = 0;
-$('.table-price tr').each(function(index){
-    var obj = $(this).parents('table');
-    $(this).find('td').mouseenter(function(){
-        var i = $(this).index();
-        obj.find('tr').each(function(){
-            $(this).find('td').eq(i-1).addClass('over');
-        });
-    }).mouseleave(function(){
-        var i = $(this).index();
-        obj.find('tr').each(function(){
-            $(this).find('td').eq(i-1).removeClass('over');
-        });
-    }).click(function(){
-        var i = $(this).index();
-        obj.find('tr').each(function(index3){
-            $(this).find('input').prop('checked', false);
-            $(this).find('td').removeClass('active').eq(i-1).each(function(){
-                if (index3) {
-                    var oo = obj.closest('.row').parent().closest('.row');
-                    var o = $(this).find('.available');
-                    if (o.hasClass('not-available')) {
-                        oo.find('.btn-buy').hide();
-                    } else if (o.hasClass('in-stock')) {
-                        oo.find('.btn-buy').show().text(o.attr('rel'));
-                    } else if (o.hasClass('on-order')) {
-                        oo.find('.btn-buy').show().text(o.attr('rel'));
-                    }
-                    oo.find('.stock').html(o.clone().removeClass('d-none'));
-                }
-            }).addClass('active').find('input').prop('checked', true);
-        });
-    }).each(function(index2){
-        if (!index && !eq && $(this).hasClass('in-stock')) {
-            eq = index2;
-            return false;
-        }
-    }).eq(eq).addClass('active').find('input').prop('checked', true);
-    if (index) {
-        eq = 0;
-    }
-});
-$('.btn-buy').mousedown(function(){
-    var id = $('#' + $(this).attr('rel') + ' input:checked').val();
-    $.get('{$url_add}', { id: id }, function(){
-        //openModal('{$url_cart_modal}');
-        openOffCanvas('{$url_cart_modal}');
-    });
-});
-JS;
-        $this->view->registerJs($js, View::POS_READY, 'jsPriceTable');
+          
+            $('.featSel').find('input[type=radio]').change(function() {     
+                var price = 0;           
+                $('.featSel').find("input[type='radio']:checked").each(function(index){                   
+                            var newVal = parseFloat($(this).val());
+                            price += newVal; 
+                        }); 
+                        console.log("price",price);
+                        $('.moneyCal').html(price);     
+            });
+                                                      
+        JS;
+      //  $this->view->registerJs($js, View::POS_READY, 'jsPriceTable');
     }
 }

@@ -3,6 +3,7 @@
 namespace siripravi\catalog\models;
 
 use Yii;
+use yii\helpers\Inflector;
 use luya\admin\ngrest\base\NgRestModel;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -12,6 +13,8 @@ use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
 use siripravi\catalog\admin\behaviors\ManyToManyBehavior;
 use luya\gallery\models\Album;
 use luya\helpers\Html;
+use luya\helpers\Url;
+use luya\helpers\ArrayHelper;
 
 /**
  * Article.
@@ -108,7 +111,7 @@ class Article extends NgRestModel
         return [
             [['name', 'product_id'], 'required'],
             [['product_id', 'unit_id', 'available', 'image_id', 'album_id', 'created_at', 'updated_at', 'position', 'enabled'], 'integer'],
-            // [['price', 'price_old'], 'number'],
+             [['price', 'price_old'], 'number'],
             [['code'], 'string', 'max' => 255],
             [['id', 'values', 'text'], 'safe'],
             // [['adminFeatures'], 'safe'],
@@ -125,7 +128,7 @@ class Article extends NgRestModel
     {
         return [
             [
-                'class' => \siripravi\catalog\admin\aws\TestActiveWindow::class, 'label' => 'My Window Alias', 'icon' => 'extension',
+                'class' => \siripravi\catalog\admin\aws\TestActiveWindow::class, 'label' => 'Window', 'icon' => 'extension',
                 //'id' => $this->id
             ],
         ];
@@ -142,11 +145,11 @@ class Article extends NgRestModel
             'album_id' => ['selectModel', 'modelClass' => Album::class, 'valueField' => 'id', 'labelField' => 'title'],
             'code' => 'text',
             'text' => 'textarea',
-            //'price' => 'decimal',
-            // 'price_old' => 'decimal',
+            'price' => 'decimal',
+            'price_old' => 'decimal',
             //'currency_id' => 'number',
             'unit_id' => 'number',
-            // 'available' => 'number',
+            'available' => 'number',
             'image_id' => 'image',
             'created_at' => 'number',
             'updated_at' => 'number',
@@ -183,8 +186,8 @@ class Article extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name', 'product_id', 'code', 'image_id', 'created_at', 'updated_at', 'enabled']],
-            [['create', 'update'], ['name', 'product_id', 'album_id', 'code', 'values',  'image_id', 'text', 'enabled']],
+            ['list', ['name', 'product_id', 'code', 'price','image_id', 'created_at', 'updated_at', 'enabled']],
+            [['create', 'update'], ['name', 'available','price','price_old', 'product_id', 'album_id', 'code', 'values',  'image_id', 'text', 'enabled']],
             ['delete', false],
         ];
     }
@@ -226,7 +229,7 @@ class Article extends NgRestModel
 
     public function getFeatures()
     {
-        return $this->hasMany(Feature::class, ['id' => 'feature_id'])->with('groups')->viaTable(FeatureGroupRef::tableName(), ['group_id' => 'id']);
+        return $this->hasMany(Feature::class, ['id' => 'feature_id'])->with('groups')->viaTable(FeatureGroupRef::tableName(), ['group_id' => 'id'])->orderBy(['position' => SORT_ASC]);
     }
 
     public function getAttributeValues()
@@ -302,7 +305,6 @@ class Article extends NgRestModel
         }
         return $data;
     }
-
     public function getPricesDef($feature_id = null)
     {
         // $article = self::findOne($article_id);
@@ -334,9 +336,9 @@ class Article extends NgRestModel
                 if (isset($list[$price->value_id])) {
                     $priceList[$price->value_id] =
                         [
-                            'label'  => $list[$price->value_id],
-                            'price'  => $price->price,
-                            'priceLabel' => $list[$price->value_id] . "  -" . $pLabel
+                            'ftext'  => $list[$price->value_id],
+                            'price'  => $price->price,                          
+                            'ptext' => $list[$price->value_id] . "  -" . $pLabel
                         ];
                 }
             }
@@ -367,7 +369,7 @@ class Article extends NgRestModel
     {
 
         if (empty($this->_currency)) {
-            $this->_currency = Currency::findOne(['code'=>'INR']);  //Yii::$app->params['currency_id']);
+            $this->_currency = Currency::findOne(['code' => 'INR']);  //Yii::$app->params['currency_id']);
         }
 
         if (empty($this->_currency)) {
@@ -375,5 +377,24 @@ class Article extends NgRestModel
         } else {
             return  $this->_currency;
         }
+    }
+
+    /**
+     * Get image object.
+     *
+     * @return \luya\admin\image\Item|boolean
+     */
+    public function getImage()
+    {
+        return Yii::$app->storage->getImage($this->image_id);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getDetailUrl()
+    {
+        return Url::toRoute(['/catalog/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->name)]);
     }
 }

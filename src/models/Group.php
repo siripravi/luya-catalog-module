@@ -8,7 +8,7 @@ use yii\behaviors\TimestampBehavior;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use yii\db\Expression;
 use luya\admin\traits\SortableTrait;
-use yii\helpers\ArrayHelper;
+use luya\helpers\ArrayHelper;
 
 use app\components\Category;
 use app\components\Page;
@@ -118,7 +118,8 @@ class Group extends NgRestModel
     public function ngRestAttributeTypes()
     {
         return [
-            'parent_id' => 'number',
+            // 'parent_id' => ['selectArray', 'data' =>  self::getList(1)], // [1 => 'Male', 2 => 'Female']
+            'parent_id' => ['selectModel', 'modelClass' => Group::class, 'valueField' => 'id', 'labelField' => 'name'],
             'name'      => 'text',
             'slug' => 'text',
             'cover_image_id' => 'image',
@@ -148,8 +149,22 @@ class Group extends NgRestModel
         return [
             ['list', ['name', 'parent_id', 'cover_image_id', 'teaser', 'text', 'created_at', 'updated_at', 'main', 'position', 'enabled']],
             [['create', 'update'], ['name', 'parent_id', 'slug', 'cover_image_id',  'teaser', 'text', 'main', 'position', 'adminFeatures', 'enabled']],
+            //  ['create',['parent_id']],
             ['delete', false],
         ];
+    }
+
+    public function ngRestRelations()
+    {
+        return [
+            ['label' => 'Features', 'targetModel' => FeatureGroupRef::class, 'apiEndpoint' => FeatureGroupRef::ngRestApiEndpoint(), 'dataProvider' => $this->getFeatureGroups()],
+
+        ];
+    }
+
+    public function getFeatureGroups()
+    {
+        return $this->hasMany(FeatureGroupRef::class, ['group_id' => 'id'])->orderBy(['position' => SORT_ASC]);
     }
 
     public function getFeatures()
@@ -218,6 +233,12 @@ class Group extends NgRestModel
     {
         return $this->hasMany(Group::class, ['parent_id' => 'id']);
     }
+
+    public static function getList($enabled)
+    {
+        return ArrayHelper::map(self::find()->andFilterWhere(['enabled' => $enabled])->orderBy('position')->all(), 'id', 'name');
+    }
+
 
     public static function getElements()
     {

@@ -1,55 +1,40 @@
 <?php
 
-\siripravi\catalog\frontend\assets\Main::register($this);
+use yii\widgets\LinkPager;
+use luya\admin\filters\MediumCrop;
 
+/* @var $this \luya\web\View */
+/* @var $provider \yii\data\ActiveDataProvider */
 ?>
-<div class="container-fluid">
-    <div class="portfolio_vave" id="portfolio">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-md-3">
-                    <h1> Portfolio </h1>
-                </div>
-                <div class="col-xs-12 col-md-9 portfolio-menu">
-                    <ul>
-                        <li id="group_all" style="color: #fe8f00;">All</li>
-                        <?php foreach ($groups as $key => $element) { ?>
-                            <li id="group<?= $key ?>"><?= $element ?></li>
-                        <?php } ?>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row">
-                <?php foreach ($items as $key => $element) : ?>
-                    <div class="col-xs-12 col-lg-3 col-md-6 no-padding element_portfolio group<!--= $element->group_id ?-->" style="background-image: url('<?= $element->image_id->getSource() ?>');">
-                        <div class="portfolio-fade-in" style="background-color:<?= "red" ?>" data-target="#exampleModal1" data-href="<!--?= $element->link ?-->" data-description="<!--?= $element->description ?-->" data-img="<?= $element->image_id->getSource() ?>">
-                            <h1><?= $element->group->name ?></h1>
-                            <h2><?= strtoupper($element->name) ?></h2>
-                            <i class="fa fa-angle-right"></i>
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <?php foreach ($provider->models as $item) : ?>
+                <div class="col mb-5">
+                    <div class="card h-100">
+                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                        <!-- Product image-->
+                        <img src="<?= $item->getImage()->applyFilter(MediumCrop::identifier())->source; ?>" class="card-img-top" />
+                       
+                        <!-- Product details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Product name-->
+                                <h5 class="fw-bolder"><?= $item->name; ?></h5>
+                                <!-- Product price-->
+                                $40.00 - $80.00
+                            </div>
+                        </div>
+                        <!-- Product actions-->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <a class="btn btn-outline-dark mt-auto" href="<?= $item->detailUrl; ?>">View Detail</a>
+                            </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            </div>
+                </div>
+            <?php endforeach; ?>
         </div>
+        <?= LinkPager::widget(['pagination' => $provider->pagination]); ?>
     </div>
-
-    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog portfolio-dialog" role="document">
-            <div class="row">
-                <div class="col-xs-9 text-center hidden-xs portfolio-bg-white">
-                    <img src="" alt="" class="img-responsive" style="width: 100%;">
-                </div>
-                <div class="col-xs-12 col-sm-3 portfolio-sticky-top">
-                    <h1 class="modal-header"></h1>
-                    <p class="modal-p"></p>
-                    <div class="modal-btn"></div>
-                </div>
-                <div class="col-xs-12 text-center visible-xs portfolio-bg-white">
-                    <img src="" alt="" class="img-responsive" style="width: 100%;">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+</section>
