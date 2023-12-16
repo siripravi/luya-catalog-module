@@ -52,7 +52,7 @@ use yii\helpers\Url;
              //  print_r($priceList); die;
                 echo "<h5>" . $feature->name . "</h5>";
                 echo "<div class='card card-outline featSel p-4'>";
-                echo "<div class='d-flex align-self-start'>";
+                echo "<div class='d-flex flex-wrap align-content-start'>";
                 echo Html::radioList(
                     'buy[' . $article->product_id . '][' . $feature->id . ']',
                     "",
@@ -61,13 +61,13 @@ use yii\helpers\Url;
                         'item' => function ($index, $label, $name, $checked, $value) {
                             // $inpId = str_replace(["buy[","]"],"_",str_replace([']['], '_', $name));
                             $checked = ($index == 0 && $value > 0) ? 'checked' : '';
-                            $return = '<div class="col-4 fsel ' . $checked . '">';
+                            $return = '<div class="p-2 flex-fill fsel ' . $checked . '">';
                             $return .= '<input type="radio" id="'.$name.$index.'" class="btn-check" data-ftext="'.$label.'" name="'.$name.'" value="'.$value.'" title="click" autocomplete="off" ' . $checked . '>';
-                            $return .= '<label class="btn btn-outline-warning align-items-end" for="' . $name . $index . '">' . '<i class="bi bi-circle pe-2" style="font-size:34px;"></i><span class="text-dark">' . ucwords($label) . '</span></label>';
+                            $return .= '<label class="btn btn-outline-warning" for="' . $name . $index . '">' . '<i class="bi bi-circle pe-2" style="font-size:34px;"></i><span class="text-dark">' . ucwords($label) . '</span></label>';
                             $return .= "</div>";
                             return $return;
                         },
-                        'class' => 'row d-flex text-inline'
+                        'class' => 'd-flex text-inline'
                     ]
                 );
                 echo "</div>";

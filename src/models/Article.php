@@ -177,7 +177,7 @@ class Article extends NgRestModel
     {
         return [
             ['label' => 'Prices', 'targetModel' => ArticlePrice::class, 'apiEndpoint' => ArticlePrice::ngRestApiEndpoint(), 'dataProvider' => $this->getPrices()],
-
+           
         ];
     }
     /**
