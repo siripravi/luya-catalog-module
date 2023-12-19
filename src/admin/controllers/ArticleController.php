@@ -24,4 +24,9 @@ class ArticleController extends \luya\admin\ngrest\base\Controller
     {
         return $this->render('articlefeature');
     }
+
+    public function actionArticleAttributes()
+    {
+        return $this->render('articleattribute');
+    }
 }

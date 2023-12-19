@@ -82,7 +82,7 @@ class DefaultController extends Controller
      * @param string $title
      * @return \yii\web\Response|string
      */
-    public function actionDetail($id, $title)
+    public function actionDetail($id, $title = "")
     {
         $model = Article::findOne(['id' => $id, 'enabled' => 1]);
        

@@ -8,6 +8,7 @@ use luya\admin\ngrest\base\NgRestModel;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use siripravi\catalog\admin\plugins\ArticleFeaturesPlugin;
+use siripravi\catalog\admin\plugins\ArticleAttributesPlugin;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use luya\admin\ngrest\plugins\SelectRelationActiveQuery;
 use siripravi\catalog\admin\behaviors\ManyToManyBehavior;
@@ -111,7 +112,7 @@ class Article extends NgRestModel
         return [
             [['name', 'product_id'], 'required'],
             [['product_id', 'unit_id', 'available', 'image_id', 'album_id', 'created_at', 'updated_at', 'position', 'enabled'], 'integer'],
-             [['price', 'price_old'], 'number'],
+            [['price', 'price_old'], 'number'],
             [['code'], 'string', 'max' => 255],
             [['id', 'values', 'text'], 'safe'],
             // [['adminFeatures'], 'safe'],
@@ -123,6 +124,7 @@ class Article extends NgRestModel
     {
         return ['adminFeatures','adminFeatureValues'];  //adminSets
     }*/
+
 
     public function ngRestActiveWindows()
     {
@@ -169,7 +171,8 @@ class Article extends NgRestModel
 
             'values' => [
                 'class' => ArticleFeaturesPlugin::class,
-            ]
+            ],
+
         ];
     }
 
@@ -177,7 +180,7 @@ class Article extends NgRestModel
     {
         return [
             ['label' => 'Prices', 'targetModel' => ArticlePrice::class, 'apiEndpoint' => ArticlePrice::ngRestApiEndpoint(), 'dataProvider' => $this->getPrices()],
-           
+
         ];
     }
     /**
@@ -186,8 +189,8 @@ class Article extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name', 'product_id', 'code', 'price','image_id', 'created_at', 'updated_at', 'enabled']],
-            [['create', 'update'], ['name', 'available','price','price_old', 'product_id', 'album_id', 'code', 'values',  'image_id', 'text', 'enabled']],
+            ['list', ['name', 'product_id', 'code', 'price', 'image_id', 'created_at', 'updated_at', 'enabled']],
+            [['create', 'update'], ['name', 'available', 'price', 'price_old', 'product_id', 'album_id', 'code', 'values', 'image_id', 'text', 'enabled']],
             ['delete', false],
         ];
     }
@@ -337,18 +340,13 @@ class Article extends NgRestModel
                     $priceList[$price->value_id] =
                         [
                             'ftext'  => $list[$price->value_id],
-                            'price'  => $price->price,                          
+                            'price'  => $price->price,
                             'ptext' => $list[$price->value_id] . "  -" . $pLabel
                         ];
                 }
             }
-            /*    if($price->currency_id = $curDef->id){
-              $rows[] = Html::tag("td",$price->qty." ".$price->unit->name. " @ ".$curDef->before.$price->price.$curDef->after." Only");
-           }*/
         }
-
         return $priceList;
-        // return Html::tag('tr', implode("\n", $rows));
     }
 
     public function getPriceDef()
@@ -367,7 +365,6 @@ class Article extends NgRestModel
 
     public function getCurrencyDef()
     {
-
         if (empty($this->_currency)) {
             $this->_currency = Currency::findOne(['code' => 'INR']);  //Yii::$app->params['currency_id']);
         }
@@ -395,6 +392,6 @@ class Article extends NgRestModel
      */
     public function getDetailUrl()
     {
-        return Url::toRoute(['/catalog/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->name)]);
+        return Url::toRoute(['/product-info', 'id' => $this->id, 'title' => Inflector::slug($this->name)]);
     }
 }

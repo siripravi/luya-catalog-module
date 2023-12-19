@@ -7,6 +7,7 @@ use luya\cms\base\PhpBlock;
 use siripravi\catalog\frontend\blockgroups\BlockCollectionGroup;
 use luya\cms\helpers\BlockHelper;
 use siripravi\catalog\models\Product;
+use siripravi\catalog\models\Article;
 use luya\cms\injectors\ActiveQueryCheckboxInjector;
 use yii\data\ActiveDataProvider;
 
@@ -120,9 +121,9 @@ class RelatedGroupBlock extends PhpBlock
     {
         $slug = (isset(Yii::$app->request->queryParams['slug'])) ? Yii::$app->request->queryParams['slug'] : 4;
         //echo $slug;
+        $id = (isset(Yii::$app->request->queryParams['id'])) ? Yii::$app->request->queryParams['id'] : 4;
 
-
-        $model = ($slug) ? Product::viewPage($slug) : $slug;
+        $model = ($id) ? Product::viewPage($id) : $id;
         //print_r($model->group_ids); die;
         $query = Product::ngRestFind();
         $query->joinWith(['groups']);
@@ -150,13 +151,17 @@ class RelatedGroupBlock extends PhpBlock
     public function getRelatedProds()
     {
         $dataProvider = [];
-        $slug = (isset(Yii::$app->request->queryParams['slug'])) ? Yii::$app->request->queryParams['slug'] : 4;
+        $slug = (isset(Yii::$app->request->queryParams['id'])) ? Yii::$app->request->queryParams['id'] : 4;
 
-        $model = ($slug) ? Product::viewPage($slug) : $slug;
-        if ($model) {
-            $query = Product::find()->joinWith(['groups'])->where(['catalog_product.enabled' => 1, 'group_id' => $model->related_ids[0]])->andWhere(['!=', 'catalog_product.id', $model->id])->limit(6);
-            $dataProvider = new ActiveDataProvider([
-                'query' => $query,
+        $model = ($slug) ? Article::findOne(['id' => $slug, 'enabled' => 1]) : $slug; //; //Product::viewPage($slug)
+        $product = Product::viewPage($model->product_id);
+        $similar = Product::find()->joinWith(['groups','articles'])->where(['catalog_product.enabled' => 1, 'group_id' => $product->group_ids])->andWhere(['!=', 'catalog_product.id',  $product->id])->limit(6)->all();
+   
+        if ($similar) { //echo "<pre>";
+            //print_r($model->related_ids);
+          //  $query = Product::find()->joinWith(['groups'])->where(['catalog_product.enabled' => 1, 'group_id' => $model->related_ids[0]])->andWhere(['!=', 'catalog_product.id', $model->id])->limit(6);
+         /*   $dataProvider = new ActiveDataProvider([
+                'query' => $similar,
                 'sort' => [
                     'defaultOrder' => [
                         'position' => SORT_DESC,
@@ -167,11 +172,12 @@ class RelatedGroupBlock extends PhpBlock
                     'pageSizeParam' => false,
                     'pageSize' => 12,
                 ],
-            ]);
+            ]);  */
+            
         }
         //$model = Product::find()->where(['id' => $this->product_ids])->all();
         return [
-            'dataProvider' => $dataProvider
+            'similar' => $similar
         ];
         /*$query = Product::find();
         $query->joinWith(['groups']);

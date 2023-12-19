@@ -7,6 +7,9 @@ use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use siripravi\catalog\admin\behaviors\ManyToManyBehavior;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
+use luya\admin\ngrest\plugins\SelectArray;
+use luya\admin\base\TypesInterface;
 
 /**
  * Feature.
@@ -17,6 +20,9 @@ use yii\helpers\ArrayHelper;
  * @property string $name
  * @property integer $position
  * @property tinyint $enabled
+ * @property integer $type
+ * @property string $input 
+ * @property string $value_text
  */
 class Feature extends NgRestModel
 {
@@ -68,6 +74,7 @@ class Feature extends NgRestModel
             'position' => Yii::t('app', 'Position'),
             'enabled' => Yii::t('app', 'Enabled'),
             'adminGroups' => 'Categories',
+            'value_text' => Yii::t('app', 'Values'),
         ];
     }
 
@@ -77,9 +84,10 @@ class Feature extends NgRestModel
     public function rules()
     {
         return [
-            [['position', 'enabled'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            [['position','type','enabled'], 'integer'],
+            [['name','input','value_text'], 'string', 'max' => 255],
             [['adminGroups'], 'safe'],
+            [['input'],'required'],
             [['group_ids'], 'each', 'rule' => ['integer']],
             [['article_ids'], 'each', 'rule' => ['integer']],
             [['filter_ids'], 'each', 'rule' => ['integer']]
@@ -125,6 +133,17 @@ class Feature extends NgRestModel
     public function ngRestAttributeTypes()
     {
         return [
+            'type' => [
+                'class' => SelectArray::class,
+                'data' => [1 => 'Integer', 2 => 'Boolean', 3  => 'String'],
+            ],
+            'input' => ['selectArray', 'data' => [
+                TypesInterface::TYPE_TEXT => 'text',
+                TypesInterface::TYPE_TEXTAREA => 'textarea',
+                TypesInterface::TYPE_CHECKBOX => 'checkbox',
+                TypesInterface::TYPE_SELECT => 'select',
+            ]],
+            'value_text' => 'html',
             'name' => 'text',
             'position' => 'number',
             'enabled' => 'number',
@@ -142,9 +161,26 @@ class Feature extends NgRestModel
         ];
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+        $fields['values_json'] = function ($model) {
+            return Json::decode($model->value_text);
+        };
+        return $fields;
+    }
+
     public function extraFields()
     {
         return ['adminGroups'];  //adminSets
+    }
+
+     /**
+     * @inheritdoc
+     */
+    public function genericSearchFields()
+    {
+        return ['name', 'value_text'];
     }
 
     /**
@@ -153,8 +189,8 @@ class Feature extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name', 'position', 'enabled']],
-            [['create', 'update'], ['name', 'adminGroups', 'position', 'enabled']],
+            ['list', ['name', 'type','value_text','position', 'enabled']],
+            [['create', 'update'], ['name','input','type','value_text','adminGroups', 'position', 'enabled']],
             ['delete', false],
         ];
     }

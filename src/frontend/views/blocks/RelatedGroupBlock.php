@@ -10,10 +10,12 @@
  */
 
 use yii\widgets\ListView;
+use siripravi\catalog\frontend\widgets\ProductCard;
 ?>
 
 <?php
-if ($this->extraValue('elements')['dataProvider']) {
+$similar = $this->extraValue('elements')['similar'];
+/*if ($this->extraValue('elements')['dataProvider']) {
     echo ListView::widget([
         'dataProvider' => $this->extraValue('elements')['dataProvider'],
         'itemView' => '@catalog/views/blocks/_item',
@@ -26,5 +28,19 @@ if ($this->extraValue('elements')['dataProvider']) {
             'class' => 'col-sm-6 col',
         ]
     ]);
-}
+}*/
 ?>
+ <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="xsection-title px-5"><span class="px-2">You may also be interested in</span></h2>
+        </div>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <?php foreach ($similar as $product) : ?>
+                <?= ProductCard::widget([
+                    'model' => $product,
+                    'link' => ['/product/' . $product->slug],
+                ]);
+                ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
