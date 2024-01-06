@@ -63,7 +63,14 @@ class ArticleBlock extends PhpBlock
      */
     public function config()
     {
-        return [];
+        return [
+            'placeholders' => [
+                [
+                    ['var' => 'pleft', 'cols' => 8, 'label' => 'Left'],
+                    ['var' => 'pright', 'cols' => 4, 'label' => 'Right'],
+                ]
+            ]
+        ];
     }
 
     /**
@@ -103,30 +110,48 @@ class ArticleBlock extends PhpBlock
 
     public function getArticleInfo()
     {
-        $articleInfo = []; $thumbnails = []; $images = [];
-        $id = \Yii::$app->request->get('id') ?  \Yii::$app->request->get('id'):6;  //$this->varValue('articleId');
-        $model = Article::findOne(['id' => $id, 'enabled' => 1]);
-       /* if (!$model) {
-            throw new NotFoundHttpException();
+        $session = \Yii::$app->session;
+        $articleInfo = [];
+        $thumbnails = [];
+        $images = [];
+        $params = \Yii::$app->request->queryParams;
+      /*  $session = \Yii::$app->session;
+        if (empty($session['__params'])) {
+            $session['__params'] = $params;
+        } else if (isset($params['id']) && ($params['id'] !=  $session['__params']['id'])) {
+            $session['__params'] = \Yii::$app->request->queryParams;
         }*/
 
-        foreach ($model->images as $id => $photo) {
-            $thumbnails[$id] = ['thumb' => $photo->image->applyFilter(MediumCrop::identifier())->source];
-            $images[] = [
-                'content' => Html::img($photo->image->applyFilter(LargeCrop::identifier())->source,['class'=>'img-fluid rounded mx-auto d-block']),
-                'options' => [
-                    // 'title' => $photo->alt,
-                    'class' => ''
-                ],
-            ];
-        }
-        $product = Product::viewPage($model->product_id);
+        $id = \Yii::$app->request->get('id'); //?  \Yii::$app->request->get('id') : $session['__params']['id'];  //$this->varValue('articleId');
 
-       /* if (!$product->enabled) {
+        if (!empty($id)) {
+            $model = Article::findOne(['id' => $id, 'enabled' => 1]);
+            foreach ($model->images as $id => $photo) {
+                $thumbnails[$id] = ['thumb' => $photo->image->applyFilter(MediumCrop::identifier())->source];
+                $images[] = [
+                    'content' => Html::img($photo->image->applyFilter(LargeCrop::identifier())->source, ['class' => 'img-fluid rounded mx-auto d-block']),
+                    'options' => [
+                        // 'title' => $photo->alt,
+                        'class' => ''
+                    ],
+                ];
+            }
+            $product = Product::viewPage($model->product_id);
+            $features = Feature::getObjectList(true, $product->group_ids);
+        } else{
+            $model = new Article();
+            $product = new Product();
+            $features = [];
+        }
+        /* if (!$model) {
+            throw new NotFoundHttpException();
+        }*/       
+
+        /* if (!$product->enabled) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }*/
-        $features = Feature::getObjectList(true, $product->group_ids);
         
+
         $articleInfo['product'] = $product;
         $articleInfo['features'] = $features;
         $articleInfo['model'] = $model;

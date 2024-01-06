@@ -340,8 +340,8 @@ class Article extends NgRestModel
                     $priceList[$price->value_id] =
                         [
                             'ftext'  => $list[$price->value_id],
-                            'price'  => $price->price,
-                            'ptext' => $list[$price->value_id] . "  -" . $pLabel
+                            'price'  => $price->value_id."_".$price->price,
+                            'ptext' => $list[$price->value_id] . "-" . $pLabel
                         ];
                 }
             }

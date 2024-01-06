@@ -97,9 +97,9 @@ class Value extends NgRestModel
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getVariants()
+    public function getArticles()
     {
-        return $this->hasMany(Variant::class, ['id' => 'variant_id'])->viaTable('catalog_article_value', ['value_id' => 'id']);
+        return $this->hasMany(Article::class, ['id' => 'article_id'])->viaTable('catalog_article_value_ref', ['value_id' => 'id']);
     }
 
     /**

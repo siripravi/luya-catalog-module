@@ -151,9 +151,9 @@ class RelatedGroupBlock extends PhpBlock
     public function getRelatedProds()
     {
         $dataProvider = [];
-        $slug = (isset(Yii::$app->request->queryParams['id'])) ? Yii::$app->request->queryParams['id'] : 4;
-
-        $model = ($slug) ? Article::findOne(['id' => $slug, 'enabled' => 1]) : $slug; //; //Product::viewPage($slug)
+       // $slug = (isset(Yii::$app->request->queryParams['id'])) ? Yii::$app->request->queryParams['id'] : 4;
+        $slug = \Yii::$app->request->get('id') ?  \Yii::$app->request->get('id'):6; 
+        $model = ($slug) ? Article::findOne(['id' => $slug, 'enabled' => 1]) : 7; //; //Product::viewPage($slug)
         $product = Product::viewPage($model->product_id);
         $similar = Product::find()->joinWith(['groups','articles'])->where(['catalog_product.enabled' => 1, 'group_id' => $product->group_ids])->andWhere(['!=', 'catalog_product.id',  $product->id])->limit(6)->all();
    

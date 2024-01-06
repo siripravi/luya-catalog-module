@@ -1,9 +1,6 @@
 <?php
-
 namespace siripravi\catalog\frontend;
-
 use yii;
-
 /**
  * Portfolio Admin Module.
  *
@@ -47,7 +44,7 @@ class Module extends \luya\base\Module
         ['pattern' => 'catalog/<slug:[0-9a-z\-]+>', 'route' => 'catalog/category/pod'],
         ['pattern' => 'menu/<slug:[0-9a-z\-]+>/page-<page:[0-9]+>', 'route' => 'catalog/category/view'],
         ['pattern' => 'menu/<slug:[0-9a-z\-]+>/page-<page:[0-9]+>', 'route' => 'catalog/default/index'],
-      //  ['pattern' => 'menu/<slug:[0-9a-z\-]+>', 'route' => 'catalog/category/view'],
+      ['pattern' => 'menu/<slug:[0-9a-z\-]+>', 'route' => 'catalog/category/view'],
       ['pattern' => 'menu/<slug:[0-9a-z\-]+>', 'route' => 'catalog/default/index'],
         ['pattern' => 'product-detail/<slug:[0-9a-z\-]+>', 'route' => 'catalog/product/index'],
         ['pattern' => 'product/<slug:[0-9a-z\-]+>', 'route' => 'catalog/product/index'],

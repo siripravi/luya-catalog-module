@@ -4,7 +4,6 @@ namespace siripravi\catalog\frontend\controllers;
 
 use siripravi\catalog\frontend\components\BaseController;
 use siripravi\catalog\frontend\components\Category;
-//use app\components\Page;
 use siripravi\catalog\models\Group;
 use siripravi\catalog\models\Feature;
 use siripravi\catalog\models\Product;
@@ -26,7 +25,7 @@ class CategoryController extends BaseController
         $categories = Group::getMain(); //!Yii::$app->cache->exists('_categories-' . Yii::$app->language) ? Group::getMain() : [];
 
         $query = Product::find();
-        $query->joinWith(['categories']);
+        $query->joinWith(['groups']);
         $query->andWhere(['catalog_product.enabled' => true]);
         $query->andWhere(['catalog_group.enabled' => true]);
         $dataProvider = new ActiveDataProvider([
@@ -68,21 +67,17 @@ class CategoryController extends BaseController
     public function actionView($slug)
     {
         $page = Category::viewPage($slug, true);
-
         if (!empty(Yii::$app->params['templateTitleCategory_' . Yii::$app->language])) {
             $page->title = str_replace('{0}', $page->h1, Yii::$app->params['templateTitleCategory_' . Yii::$app->language]);
-
             if (!empty($model->text)) {
                 $page->text = str_replace('{0}', $page->h1, Yii::$app->params['templateDescriptionCategory_' . Yii::$app->language]);
             }
-
             Yii::$app->view->title = $page->title;
             Yii::$app->view->registerMetaTag([
                 'name' => 'description',
                 'content' => $page->description
             ], 'description');
         }
-
         $this->view->params['category_ids'] = [$page->id];
         //print_r($this->view->params['category_ids']);die;
         $searchModel = new ProductFilter(['category_id' => $page->id, 'enabled' => true]);

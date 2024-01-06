@@ -1,7 +1,5 @@
 <?php
-
 namespace siripravi\catalog\models;
-
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
@@ -12,11 +10,8 @@ use yii\db\Query;
 class ProductFilter extends \siripravi\catalog\frontend\components\Product
 {
     public $category_id;
-
     public $feature_ids = [];
-
     public $product_ids = [];
-
     /**
      * @inheritdoc
      */
@@ -26,10 +21,8 @@ class ProductFilter extends \siripravi\catalog\frontend\components\Product
             [['feature_ids'], 'each', 'rule' => ['each', 'rule' => ['integer']]],
             [['product_ids'], 'each', 'rule' => ['integer']],
             [['name', 'category_id'], 'safe'],
-
         ];
     }
-
     /**
      * @inheritdoc
      */
@@ -38,7 +31,6 @@ class ProductFilter extends \siripravi\catalog\frontend\components\Product
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
-
     /**
      * Creates data provider instance with search query applied
      *
@@ -49,32 +41,22 @@ class ProductFilter extends \siripravi\catalog\frontend\components\Product
     public function search($params)
     {
         $query = Product::find();
-
         $query->joinWith(['groups']);
-
         // add conditions that should always apply here
-
-
         $this->load($params);
-
         if ($this->feature_ids) {
-
             foreach ($this->feature_ids as $feature_id => $value_ids) {
                 if ($value_ids) {
                     $variant_ids[$feature_id] = (new Query())->from('catalog_article_value_ref')->andFilterWhere(['value_id' => $value_ids])->column();
                 }
             }
-
             if (isset($variant_ids)) {
-
                 $this->product_ids = [0];
-
                 if (count($variant_ids) > 1) {
                     $variant_ids = call_user_func_array('array_intersect', $variant_ids);
                 } else {
                     $variant_ids = current($variant_ids);
                 }
-
                 if (!empty($variant_ids)) {
                     $this->product_ids = (new Query())->from('catalog_article')->select('product_id')->where(['id' => $variant_ids])->groupBy('product_id')->column();
                 }
@@ -107,7 +89,6 @@ class ProductFilter extends \siripravi\catalog\frontend\components\Product
 
         return $dataProvider;
     }
-
 
     public function getGroups()
     {

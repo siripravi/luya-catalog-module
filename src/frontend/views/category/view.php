@@ -34,8 +34,6 @@ JS;
 $this->registerJs($js);
 ?>
 
-
-
 <?php Pjax::begin(['id' => 'pjax']); ?>
 <div class="container" style="margin-top:124px;">
     <?php if ($page->text) : ?><h2 class="text-center heading"><?= $page->text ?> </h2><?php endif; ?>
@@ -46,7 +44,7 @@ $this->registerJs($js);
         'features' => $features
     ])
     ?>
-
+HELLO WORLD
     <?php
     echo ListView::widget([
         'dataProvider' => $dataProvider,

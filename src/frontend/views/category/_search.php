@@ -1,7 +1,7 @@
 <?php
 
-use app\models\Feature;
-use app\models\Value;
+use siripravi\catalog\models\Feature;
+use siripravi\catalog\models\Value;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
@@ -23,7 +23,6 @@ JS;
     $this->registerJs($js);
     ?>
     <div class="product-search">
-
         <?php $form = ActiveForm::begin([
             'action' => Url::current(),
             'method' => 'get',
@@ -38,8 +37,6 @@ JS;
                 <?= $form->field($model, 'feature_ids[' . $feature->id . ']')->checkboxList(Value::getListEx($feature->id, $model->category_id), ['class' => 'filter-values'])->label($feature->name . ($feature->after ? ', ' . $feature->after : '')) ?>
             </div>
         <?php endforeach; ?>
-
         <?php ActiveForm::end(); ?>
-
     </div>
 <?php endif; ?>

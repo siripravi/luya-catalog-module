@@ -8,6 +8,7 @@ use luya\admin\ngrest\plugins\CheckboxRelationActiveQuery;
 use siripravi\catalog\admin\behaviors\ManyToManyBehavior;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
+use siripravi\catalog\models\Value;
 use luya\admin\ngrest\plugins\SelectArray;
 use luya\admin\base\TypesInterface;
 
@@ -20,9 +21,11 @@ use luya\admin\base\TypesInterface;
  * @property string $name
  * @property integer $position
  * @property tinyint $enabled
+ * @property integer $after
  * @property integer $type
  * @property string $input 
  * @property string $value_text
+ * 
  */
 class Feature extends NgRestModel
 {
@@ -73,6 +76,7 @@ class Feature extends NgRestModel
             'name' => Yii::t('app', 'Name'),
             'position' => Yii::t('app', 'Position'),
             'enabled' => Yii::t('app', 'Enabled'),
+            'after'=> Yii::t('app', 'After'),
             'adminGroups' => 'Categories',
             'value_text' => Yii::t('app', 'Values'),
         ];
@@ -87,6 +91,7 @@ class Feature extends NgRestModel
             [['position','type','enabled'], 'integer'],
             [['name','input','value_text'], 'string', 'max' => 255],
             [['adminGroups'], 'safe'],
+            [['after'], 'string', 'max' => 32],
             [['input'],'required'],
             [['group_ids'], 'each', 'rule' => ['integer']],
             [['article_ids'], 'each', 'rule' => ['integer']],
@@ -145,6 +150,7 @@ class Feature extends NgRestModel
             ]],
             'value_text' => 'html',
             'name' => 'text',
+            'after' => 'text',
             'position' => 'number',
             'enabled' => 'number',
         ];
@@ -189,8 +195,8 @@ class Feature extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name', 'type','value_text','position', 'enabled']],
-            [['create', 'update'], ['name','input','type','value_text','adminGroups', 'position', 'enabled']],
+            ['list', ['name', 'type','value_text','after','position', 'enabled']],
+            [['create', 'update'], ['name','input','type','value_text','after','adminGroups', 'position', 'enabled']],
             ['delete', false],
         ];
     }
