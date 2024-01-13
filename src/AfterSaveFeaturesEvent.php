@@ -3,7 +3,7 @@
 namespace siripravi\catalog;
 
 use luya\forms\models\Form;
-use siripravi\catalog\AddressModel;
+use siripravi\catalog\models\ArticleFeatureModel;
 use yii\base\Event;
 
 /**
@@ -20,7 +20,7 @@ use yii\base\Event;
  * 
  * @since 1.6.0
  */
-class AfterSaveAddressEvent extends Event
+class AfterSaveFeaturesEvent extends Event
 {
     /**
      * @var SubmissionEmail
@@ -46,7 +46,7 @@ class AfterSaveAddressEvent extends Event
     /**
      * @param Model $form
      */
-    public function setModel(AddressModel $model)   {
+    public function setModel(ArticleFeatureModel $model)   {
         $this->_model= $model;
     }
 }

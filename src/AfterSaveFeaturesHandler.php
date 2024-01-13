@@ -1,29 +1,18 @@
 <?php
-
 namespace siripravi\catalog;
-
-use yii\base\Event;
 use app\modules\cart\models\Cart;
 use yii\helpers\ArrayHelper;
-/**
- * A form after save event to attach in the config.
- * 
- * ```php
- * 'forms' => [
- *     'class' => 'luya\forms\Forms',
- *     'on afterSave' => function(\luya\forms\AfterSaveEvent $event) {
- *         // do something with event model 
- *     }
- * ]
- * ```
- * 
- * @since 1.6.0
- */
-class CartEvent extends Event
+class AfterSaveFeaturesHandler
 {
-    public $model;
-
-    public function onDance($event){
+    /**
+     * Handles the after login event process to send emails
+     *
+     * @param FormEvent $event Event object form
+     *
+     * @return null
+     */
+    public static function handleAfterSave(\siripravi\catalog\AfterSaveFeaturesEvent $event)
+    {
         $model = $event->model;
         $id = implode("+", $model->Features);
         $ftext = $model->FeatureText;

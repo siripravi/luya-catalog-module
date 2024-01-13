@@ -248,7 +248,8 @@ class Article extends NgRestModel
         $product = $this->product;
         $value_ids = $this->value_ids;
         if ($product->group_ids)
-            $features = Feature::getObjectList(true, $product->group_ids);
+            $features = Feature::get
+        (true, $product->group_ids);
         else
             $features = [];
 
@@ -394,4 +395,6 @@ class Article extends NgRestModel
     {
         return Url::toRoute(['/product-info', 'id' => $this->id, 'title' => Inflector::slug($this->name)]);
     }
+
+    
 }

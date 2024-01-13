@@ -1,8 +1,9 @@
 <?php
+
 namespace siripravi\catalog\frontend\blocks;
 
 use luya\cms\base\PhpBlock;
-use luya\forms\blockgroups\FormGroup;
+use siripravi\catalog\frontend\blockgroups\BlockCollectionGroup;
 use luya\helpers\StringHelper;
 use Yii;
 
@@ -12,15 +13,16 @@ use Yii;
  * @author Basil Suter <git@nadar.io>
  * @since 1.0.0
  */
-class FeatureViewBlock extends PhpBlock
+class FeatureViewBlock extends PhpBlock //\app\blocks\FormBlock
 {
     public $template = '<p>{{label}}: {{value}}</p>';
+    public $previewButtonsTemplate = '<div class="forms-preview-buttons-container pt-3">{{back}}<span class="forms-divider"> | </span>{{submit}}</div>';
 
     public $isContainer = false;
-
+    public $module = 'catalog';
     public function blockGroup()
     {
-        return FormGroup::class;
+        return BlockCollectionGroup::class;
     }
 
     public function config()
@@ -28,6 +30,14 @@ class FeatureViewBlock extends PhpBlock
         return [
             'vars' => [
                 ['var' => 'template', 'label' => Yii::t('forms', 'Row Template'), 'type' => self::TYPE_TEXTAREA, 'placeholder' => $this->template],
+                [
+                    'var' => 'formId',
+                    'label' => Yii::t('forms', 'Form'),
+                    'type' => self::TYPE_SELECT_CRUD,
+                    'required' => true,
+                    'options' => ['route' => 'forms/form/index', 'api' => 'admin/api-forms-form', 'fields' => ['title']]
+                ],
+
             ]
         ];
     }
@@ -49,14 +59,15 @@ class FeatureViewBlock extends PhpBlock
         return 'Preview Features';  //Yii::t('forms', 'Summary');
     }
 
-     /**
+
+    /**
      * @inheritDoc
      */
     public function extraVars()
     {
         return [
-           //'ajaxLink' => $this->createAjaxLink('HelloWorld', ['time' => time()]),
-           //'articleId' => \Yii::$app->request->get('id'),
+            //'ajaxLink' => $this->createAjaxLink('HelloWorld', ['time' => time()]),
+            //'articleId' => \Yii::$app->request->get('id'),
             'summary' => $this->getSummary()
         ];
     }
@@ -69,6 +80,11 @@ class FeatureViewBlock extends PhpBlock
         return 'description';
     }
 
+    /* public function frontend(){
+        //return parent->frontend();
+        $model = Yii::$app->forms->model;
+        return get_class($model);  //$this->varValue('formId');
+    }*/
     public function getSummary()
     {
         Yii::$app->forms->loadModel();

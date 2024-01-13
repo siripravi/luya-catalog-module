@@ -1,10 +1,11 @@
 <?php
 
-namespace siripravi\catalog;
+namespace siripravi\catalog\models;
 
 use luya\base\DynamicModel;
 use app\modules\cart\models\Cart;
 use yii\helpers\ArrayHelper;
+use luya\helpers\StringHelper;
 use Yii;
 
 /**
@@ -13,23 +14,24 @@ use Yii;
  * @author Basil Suter <git@nadar.io>
  * @since 1.0.0
  */
-class AddressModel extends \luya\forms\Model
+class ArticleFeatureModel extends \luya\forms\Model
 {
     /**
      * @var string The uniue form id
      */
     public $formId;
-    public $Aid;
-    public $Name;
-    public $Address1;
-    public $Address2;
-    public $Mobile1;
-    public $Mobile2;
-    public $Pincode;
+    public $Pid;
+    public $Features = [];
+    public $Price;
+    public $Delivery;
+    public $Message;
+    public $FeatureText;
+    public $forNew = true;
 
-   public $addressList;
-    public $activeFormClassOptions = ['id' => 'address-form'];
+    public $pjaxOptions = ['id'=>'feat-pjax'];
     public $redirectUrl = "/shopping-cart";
+
+    public $activeFormClassOptions = ['id' => 'cart-form'];
     /**
      * @var array An array where the key is the attribute and value the formatter option, like
      * ```php
@@ -37,22 +39,28 @@ class AddressModel extends \luya\forms\Model
      * ```
      */
     public $formatters = [];
-
     const EVENT_AFTER_SAVE = 'afterSave';
-    
+
     public function init()
     {
-            parent::init();
-    
-            //bind after confirmation event
-            $this->on(
-                self::EVENT_AFTER_SAVE,
-                [
-                    new \siripravi\catalog\AfterSaveAddressHandler(),
-                    'handleAfterSave',
-                ]
-            );
+        parent::init();
+
+        //bind after confirmation event
+        $this->on(
+            self::EVENT_AFTER_SAVE,
+            [
+                new \siripravi\catalog\AfterSaveFeaturesHandler(),
+                'handleAfterSave',
+            ]
+        );
     }
+
+    public function rules() {
+        return array_merge(parent::rules(), 
+               [
+                [['Pid','Features','FeatureText','Price', 'Delivery','Message'], 'safe']
+               ]);
+      }
     /**
      * Format a given attribute
      *
@@ -116,15 +124,42 @@ class AddressModel extends \luya\forms\Model
         return $result;
     }
 
-    public static function getAfterSaveEvent(\siripravi\catalog\AddressModel $model)
+    public static function saveCartCookie($model)
     {
-        return \Yii::createObject(['class' => \siripravi\catalog\AfterSaveAddressEvent::class, 'model' => $model]);
+        $id = implode("+", $model->Features);
+        $ftext = $model->FeatureText;
+        $pid = $model->Pid;
+        $price = $model->Price;
+        $cart = Cart::getCart();
+
+        if (isset($cart[$id])) {
+            return false;
+        }
+        $qty = isset($cart[$id]) ? $cart[$id]["qty"] + 1 : 1;
+        ArrayHelper::setValue($cart, $id, ["qty" =>  $qty, "pid" => $pid, "ftext" => $ftext, "price" => $price]);
+        Cart::setCart($cart);
     }
 
-    public static function renderAddress($address){
-        return '<p>'.$address->zipcode.' '.$address->country.', '.$address->region.', '.$address->city.'</p>'.
-        '<p><em>'.$address->street.', '.$address->house.' - '.$address->apartment.'</em></p>';
+    public static function getAfterSaveEvent(self $model)
+    {
+        return \Yii::createObject(['class' => \siripravi\catalog\AfterSaveFeaturesEvent::class, 'model' => $model]);
     }
-   
-    
+
+    /* 6-inch-5-layer_36_2354+Eggless_31_251  */
+    public function formatFText($ftext)
+    {
+        $words = []; $price = 0;
+        $wor = StringHelper::explode($ftext, "+");
+        if(count($wor) > 0){
+        foreach ($wor as $i => $word) {
+           
+            $words[$i] = StringHelper::explode($word, "_");
+            if(count($words[$i]) == 3)
+            $price += ($words[$i][2]) ?: 0;
+            $words[$i]['price']= $price;
+        }
+    }      
+        return $words;
+        // ArrayHelpers::map($words,)
+    }
 }

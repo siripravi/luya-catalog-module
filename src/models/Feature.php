@@ -76,7 +76,7 @@ class Feature extends NgRestModel
             'name' => Yii::t('app', 'Name'),
             'position' => Yii::t('app', 'Position'),
             'enabled' => Yii::t('app', 'Enabled'),
-            'after'=> Yii::t('app', 'After'),
+            'after' => Yii::t('app', 'After'),
             'adminGroups' => 'Categories',
             'value_text' => Yii::t('app', 'Values'),
         ];
@@ -88,11 +88,11 @@ class Feature extends NgRestModel
     public function rules()
     {
         return [
-            [['position','type','enabled'], 'integer'],
-            [['name','input','value_text'], 'string', 'max' => 255],
+            [['position', 'type', 'enabled'], 'integer'],
+            [['name', 'input', 'value_text'], 'string', 'max' => 255],
             [['adminGroups'], 'safe'],
             [['after'], 'string', 'max' => 32],
-            [['input'],'required'],
+            [['input'], 'required'],
             [['group_ids'], 'each', 'rule' => ['integer']],
             [['article_ids'], 'each', 'rule' => ['integer']],
             [['filter_ids'], 'each', 'rule' => ['integer']]
@@ -181,7 +181,7 @@ class Feature extends NgRestModel
         return ['adminGroups'];  //adminSets
     }
 
-     /**
+    /**
      * @inheritdoc
      */
     public function genericSearchFields()
@@ -195,8 +195,8 @@ class Feature extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['name', 'type','value_text','after','position', 'enabled']],
-            [['create', 'update'], ['name','input','type','value_text','after','adminGroups', 'position', 'enabled']],
+            ['list', ['name', 'type', 'value_text', 'after', 'position', 'enabled']],
+            [['create', 'update'], ['name', 'input', 'type', 'value_text', 'after', 'adminGroups', 'position', 'enabled']],
             ['delete', false],
         ];
     }
@@ -223,10 +223,7 @@ class Feature extends NgRestModel
      * @param array $category_ids
      * @return @return MultilingualQuery|\yii\db\ActiveQuery
      */
-    public static function getObjectList($enabled, array $category_ids)
-    {
-        return self::find()->joinWith(['groups'])->andFilterWhere(['catalog_feature.enabled' => $enabled])->andFilterWhere(['group_id' => $category_ids])->orderBy('position')->all();
-    }
+   
 
     /**
      * @return \yii\db\ActiveQuery
