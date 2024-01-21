@@ -1,10 +1,10 @@
 <?php
 /**
  * @var $this \yii\web\View
- * @var $model \dench\cart\models\Payment
+ * @var $model \dench\shopcart\models\Payment
  */
 
-use dench\cart\models\Payment;
+use dench\shopcart\models\Payment;
 
 echo $model->text;
 

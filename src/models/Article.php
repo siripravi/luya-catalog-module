@@ -17,6 +17,7 @@ use luya\helpers\Html;
 use luya\helpers\Url;
 use luya\helpers\ArrayHelper;
 
+
 /**
  * Article.
  * 
@@ -39,6 +40,7 @@ use luya\helpers\ArrayHelper;
  */
 class Article extends NgRestModel
 {
+    
     private $_price;
     private $_currency;
 
@@ -248,8 +250,7 @@ class Article extends NgRestModel
         $product = $this->product;
         $value_ids = $this->value_ids;
         if ($product->group_ids)
-            $features = Feature::get
-        (true, $product->group_ids);
+            $features = Feature::getFilterList(true, $product->group_ids);
         else
             $features = [];
 
@@ -396,5 +397,5 @@ class Article extends NgRestModel
         return Url::toRoute(['/product-info', 'id' => $this->id, 'title' => Inflector::slug($this->name)]);
     }
 
-    
+ 
 }

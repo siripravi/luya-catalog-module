@@ -1,7 +1,8 @@
 <?php
 namespace siripravi\catalog;
-use app\modules\cart\models\Cart;
+use app\modules\shopcart\models\Cart;
 use yii\helpers\ArrayHelper;
+use yz\shoppingcart\ShoppingCart;
 class AfterSaveFeaturesHandler
 {
     /**
@@ -26,6 +27,15 @@ class AfterSaveFeaturesHandler
         $qty = isset($cart[$id]) ? $cart[$id]["qty"] + 1 : 1;
         ArrayHelper::setValue($cart, $id, ["qty" =>  $qty, "pid" => $pid, "ftext" => $ftext, "price" => $price]);
         Cart::setCart($cart);
+
+        //** New Cart functionality with db save */
+        $shopping = new ShoppingCart();       
+        //if ($model) {
+            $shopping->put($model, $model->Quantity);
+          //  \Yii::$app->cart->create($model, $model->Quantity);
+       // }       
+     //   $ycart = \Yii::$app->cart;
+    //    $ycart->put($model, 1);
         return true;
     }
 }

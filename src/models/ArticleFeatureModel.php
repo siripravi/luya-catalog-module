@@ -3,9 +3,12 @@
 namespace siripravi\catalog\models;
 
 use luya\base\DynamicModel;
-use app\modules\cart\models\Cart;
+use app\modules\shopcart\models\Cart;
 use yii\helpers\ArrayHelper;
 use luya\helpers\StringHelper;
+
+use yz\shoppingcart\CartPositionInterface;
+use hscstudio\cart\ItemTrait;
 use Yii;
 
 /**
@@ -14,22 +17,26 @@ use Yii;
  * @author Basil Suter <git@nadar.io>
  * @since 1.0.0
  */
-class ArticleFeatureModel extends \luya\forms\Model
+class ArticleFeatureModel extends \luya\forms\Model implements CartPositionInterface 
 {
+    use ItemTrait;
     /**
      * @var string The uniue form id
      */
     public $formId;
     public $Pid;
+    public $Name;
     public $Features = [];
+
+    public $Quantity = 1;
     public $Price;
     public $Delivery;
     public $Message;
     public $FeatureText;
     public $forNew = true;
-
-    public $pjaxOptions = ['id'=>'feat-pjax'];
-    public $redirectUrl = "/shopping-cart";
+    public $isPjax = false;
+    public $pjaxOptions = ['id' => 'feat-pjax'];
+    public $redirectUrl = "/shopcart";
 
     public $activeFormClassOptions = ['id' => 'cart-form'];
     /**
@@ -55,12 +62,15 @@ class ArticleFeatureModel extends \luya\forms\Model
         );
     }
 
-    public function rules() {
-        return array_merge(parent::rules(), 
-               [
-                [['Pid','Features','FeatureText','Price', 'Delivery','Message'], 'safe']
-               ]);
-      }
+    public function rules()
+    {
+        return array_merge(
+            parent::rules(),
+            [
+                [['Pid', 'Features', 'FeatureText', 'Price', 'Delivery', 'Message'], 'safe']
+            ]
+        );
+    }
     /**
      * Format a given attribute
      *
@@ -131,7 +141,6 @@ class ArticleFeatureModel extends \luya\forms\Model
         $pid = $model->Pid;
         $price = $model->Price;
         $cart = Cart::getCart();
-
         if (isset($cart[$id])) {
             return false;
         }
@@ -148,18 +157,41 @@ class ArticleFeatureModel extends \luya\forms\Model
     /* 6-inch-5-layer_36_2354+Eggless_31_251  */
     public function formatFText($ftext)
     {
-        $words = []; $price = 0;
+        $words = [];
+        $price = 0;
         $wor = StringHelper::explode($ftext, "+");
-        if(count($wor) > 0){
-        foreach ($wor as $i => $word) {
-           
-            $words[$i] = StringHelper::explode($word, "_");
-            if(count($words[$i]) == 3)
-            $price += ($words[$i][2]) ?: 0;
-            $words[$i]['price']= $price;
+        if (count($wor) > 0) {
+            foreach ($wor as $i => $word) {
+                $words[$i] = StringHelper::explode($word, "_");
+                if (count($words[$i]) == 3)
+                    $price += ($words[$i][2]) ?: 0;
+                $words[$i]['price'] = $price;
+            }
         }
-    }      
         return $words;
         // ArrayHelpers::map($words,)
     }
+    public function getName()
+    {
+       // return "Product Name";
+        $model = Article::findOne(['id' => $this->Pid, 'enabled' => 1]);
+        return $model->name;
+    }
+    public function getPrice()
+    {
+        return $this->Price;
+    }
+
+    public function getId()
+    {
+        //return $this->id;
+        return implode("+", $this->Features);
+    }
+ /*   public function getCartPosition()
+    {
+        return \Yii::createObject([
+            'class' => 'app\models\ProductCartPosition',
+            'id' => $this->id,
+        ]);
+    }*/
 }

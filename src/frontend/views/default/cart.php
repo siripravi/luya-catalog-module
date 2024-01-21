@@ -3,11 +3,11 @@
 /* @var $page common\modules\page\models\Page */
 /* @var $items app\models\Variant[] */
 /* @var $cart array */
-/* @var $model common\modules\cart\models\OrderForm */
+/* @var $model common\modules\shopcart\models\OrderForm */
 /* @var $notAvailable boolean */
 
-use app\modules\cart\models\Delivery;
-use app\modules\cart\models\Payment;
+use app\modules\shopcart\models\Delivery;
+use app\modules\shopcart\models\Payment;
 use himiklab\yii2\recaptcha\ReCaptcha2;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;

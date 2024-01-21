@@ -19,9 +19,9 @@ use luya\helpers\Json;
 use luya\helpers\Url;
 use luya\helpers\StringHelper;
 use luya\cms\models\Redirect;
-use app\modules\cart\models\Cart;
-use app\modules\cart\models\Order;
-use app\modules\cart\models\OrderForm;
+use app\modules\shopcart\models\Cart;
+use app\modules\shopcart\models\Order;
+use app\modules\shopcart\models\OrderForm;
 use app\modules\cart\widgets\CartWidget;
 
 use yii\data\ActiveDataProvider;

@@ -2,7 +2,7 @@
 
 namespace app\modules\cart\actions;
 
-use app\modules\cart\models\Payment;
+use app\modules\shopcart\models\Payment;
 use Yii;
 use yii\base\Action;
 
